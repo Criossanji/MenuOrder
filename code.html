@@ -24,14 +24,17 @@
             <h2>Delivery Details</h2>
             <p>Please fill in your details before checkout.</p>
             <div class="checkout-form">
-                <label for="customerName">Name</label>
-                <input id="customerName" type="text" placeholder="Your full name">
+                <label for="customerName">Name *</label>
+                <input id="customerName" type="text" placeholder="Your full name" required>
 
-                <label for="customerAddress">Delivery Address</label>
-                <textarea id="customerAddress" rows="3" placeholder="Building, street, area"></textarea>
+                <label for="customerAddress">Delivery Address *</label>
+                <textarea id="customerAddress" rows="3" placeholder="Building, street, area" required></textarea>
 
-                <label for="customerPhone">Phone Number</label>
-                <input id="customerPhone" type="tel" placeholder="+961 ...">
+                <label for="customerPhone">Phone Number *</label>
+                <input id="customerPhone" type="tel" placeholder="+961 ..." required>
+
+                <label for="customerNotes">Notes (if any)</label>
+                <textarea id="customerNotes" rows="2" placeholder="Any extra details (optional)"></textarea>
             </div>
             <div class="modal-actions">
                 <button id="checkoutBack" class="btn-secondary" type="button">Back</button>

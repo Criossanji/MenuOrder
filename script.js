@@ -128,7 +128,7 @@
       `👤 *Name:* ${customer.name || '-'}`,
       `📍 *Delivery Address:* ${customer.address || '-'}`,
       `📞 *Phone Number:* ${customer.phone || '-'}`,
-      '📝 *Notes:* -',
+      `📝 *Notes:* ${customer.notes || '-'}`,
       '',
       'Thank you! 🙏'
     );
@@ -151,6 +151,7 @@
     const nameInput = $('#customerName');
     const addressInput = $('#customerAddress');
     const phoneInput = $('#customerPhone');
+    const notesInput = $('#customerNotes');
 
     const closeModal = () => modal.classList.add('hidden');
     const openModal = () => modal.classList.remove('hidden');
@@ -160,7 +161,8 @@
       const customer = {
         name: (nameInput?.value || '').trim(),
         address: (addressInput?.value || '').trim(),
-        phone: (phoneInput?.value || '').trim()
+        phone: (phoneInput?.value || '').trim(),
+        notes: (notesInput?.value || '').trim()
       };
       if(!customer.name || !customer.address || !customer.phone){
         alert('Please fill name, address, and phone number.');
