@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Croissanji's Menu</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div id="orderTypeModal" class="modal-backdrop hidden">
+        <div class="modal-card">
+            <h2>Welcome to Croissanji</h2>
+            <p>Please choose your order type before browsing the menu.</p>
+            <div class="modal-actions">
+                <button id="selectDelivery" class="btn-primary">Delivery</button>
+                <button id="selectTable" class="btn-secondary">For Table</button>
+            </div>
+        </div>
+    </div>
+    <div id="checkoutModal" class="modal-backdrop hidden">
+        <div class="modal-card">
+            <h2>Delivery Details</h2>
+            <p>Please fill in your details before checkout.</p>
+            <div class="checkout-form">
+                <label for="customerName">Name</label>
+                <input id="customerName" type="text" placeholder="Your full name">
+
+                <label for="customerAddress">Delivery Address</label>
+                <textarea id="customerAddress" rows="3" placeholder="Building, street, area"></textarea>
+
+                <label for="customerPhone">Phone Number</label>
+                <input id="customerPhone" type="tel" placeholder="+961 ...">
+            </div>
+            <div class="modal-actions">
+                <button id="checkoutBack" class="btn-secondary" type="button">Back</button>
+                <button id="checkoutSubmit" class="btn-primary" type="button">Checkout to WhatsApp</button>
+            </div>
+        </div>
+    </div>
+    <header>
+        <div class="header-content">
+            <img src="images/logocroissanji.png" alt="Croissanji Logo" class="logo">
+            <button class="menu-toggle" data-menu-target="siteMenu" aria-label="Open menu">☰</button>
+        </div>
+        <p class="page-tag">Full Menu</p>
+        <nav class="top-links" id="siteMenu">
+            <a href="index.html">Menu Categories</a>
+            <a href="about.html">About Us</a>
+            <a href="certifications.html">Certifications</a>
+            <a href="location.html">Location</a>
+            <a href="https://wa.me/96170673328" target="_blank" rel="noopener">WhatsApp</a>
+            <a href="https://instagram.com/croissanji" target="_blank" rel="noopener">Instagram</a>
+            <a href="https://facebook.com/croissanji" target="_blank" rel="noopener">Facebook</a>
+        </nav>
+    </header>
+
+    <nav class="category-nav">
+        <button class="category-link" data-target="breakfast">Breakfast</button>
+        <button class="category-link" data-target="dinner_chicken">Dinner Chicken</button>
+        <button class="category-link" data-target="dinner_beef">Dinner Beef</button>
+        <button class="category-link" data-target="burgers">Burgers</button>
+        <button class="category-link" data-target="meals">Meals</button>
+        <button class="category-link" data-target="healthy_meals">Healthy Meals</button>
+        <button class="category-link" data-target="appetizers">Appetizers</button>
+        <button class="category-link" data-target="side_orders">Side Orders</button>
+        <button class="category-link" data-target="drinks">Drinks</button>
+        <button class="category-link" data-target="desserts">Desserts</button>
+        <button class="category-link" data-target="mini">Mini Bites</button>
+    </nav>
+
+    <main>
+        <div class="menu-sections">
+        <!-- Breakfast Section -->
+        <section id="breakfast">
+            <h2>Breakfast</h2>
+            <div class="menu-item">
+                <img src="images/croissant.jpg" alt="Cheese Croissant">
+                <div class="item-info">
+                    <h3>Cheese Croissant</h3>
+                    <p>A flaky croissant filled with melted cheese.</p>
+                    <p class="calories">Calories: 250, Protein: 17g</p>
+                    <p class="price">1.33 $</p>
+                </div>
+            </div>
+            <div class="menu-item">
+                <img src="images/croissant.jpg" alt="Zaatar Croissant">
+                <div class="item-info">
+                    <h3>Zaatar Croissant</h3>
+                    <p>A croissant filled with zaatar and olive oil.</p>
+                    <p class="calories">Calories: 10, Protein: 2g</p>
+                    <p class="price">1.33 $</p>
+                </div>
+            </div>
+            <div class="menu-item">
+                <img src="images/croissant.jpg" alt="Cheese and Olive Croissant">
+                <div class="item-info">
+                    <h3>Cheese and Olive Croissant</h3>
+                    <p>A croissant filled with cheese and olives.</p>
+                    <p class="calories">Calories: 250, Protein: 17g</p>
+                    <p class="price">1.33 $</p>
+                </div>
+            </div>
+            <div class="menu-item">
+                <img src="images/croissant.jpg" alt="Mortadella and Cheese Croissant">
+                <div class="item-info">
+                    <h3>Mortadella and Cheese Croissant</h3>
+                    <p>A croissant filled with mortadella and cheese.</p>
+                    <p class="calories">Calories: 240, Protein: 17g</p>
+                    <p class="price">1.33 $</p>
+                </div>
+            </div>
+            <div class="menu-item">
+                <img src="images/croissant.jpg" alt="Pizza Croissant">
+                <div class="item-info">
+                    <h3>Pizza Croissant</h3>
+                    <p>A croissant filled with pizza toppings.</p>
+                    <p class="calories">Calories: 350, Protein: 24g</p>
+                    <p class="price">1.33 $</p>
+                </div>
+            </div>
+            <div class="menu-item">
+                <img src="images/croissant.jpg" alt="Chocolate Croissant">
+                <div class="item-info">
+                    <h3>Chocolate Croissant</h3>
+                    <p>A croissant filled with rich chocolate.</p>
+                    <p class="calories">Calories: 300, Protein: 8g</p>
+                    <p class="price">1.33 $</p>
+                </div>
+            </div>
+             <div class="menu-item">
+                <img src="images/Jebnehlite.jpeg" alt="Chocolate Croissant">
+                <div class="item-info">
+                    <h3>Lite Cheese Croissant</h3>
+                    <p>A Lite Diet croissant filled with Thyme.</p>
+                    <p class="calories">Calories: 100, Protein: 8g</p>
+                    <p class="price">1.66 $</p>
+                </div>
+            </div>
+             <div class="menu-item">
+                <img src="images/Zaatarlite.jpeg" alt="Chocolate Croissant">
+                <div class="item-info">
+                    <h3>Lite Thyme Croissant</h3>
+                    <p>A Lite Diet croissant filled with Thyme.</p>
+                    <p class="calories">Calories: 90, Protein: 4g</p>
+                    <p class="price">1.66 $</p>
+                </div>
+            </div>
+            
+            <div class="menu-item">
+                <img src="images/turkey-and-cheese.jpg" alt="Turkey and Cheese Sandwich">
+                <div class="item-info">
+                    <h3>Turkey and Cheese Sandwich</h3>
+                    <p>Turkey, cheese, mayo, corn, lettuce, and pickles.</p>
+                    <p class="calories">Calories: 240, Protein: 22g</p>
+                    <p class="price">4 $</p>
+                </div>
+            </div>
+            <div class="menu-item">
+                <img src="images/halloum.jpg" alt="Grilled Halloumi Sandwich">
+                <div class="item-info">
+                    <h3>Grilled Halloumi Sandwich</h3>
+                    <p>Grilled halloumi with tomato, cucumber, lettuce, and olive oil.</p>
+                    <p class="calories">Calories: 350, Protein: 22g</p>
+                    <p class="price">3.5 $</p>
+                </div>
+            </div>
+            <div class="menu-item">
+                <img src="images/labneh.jpg" alt="Labneh Sandwich">
+                <div class="item-info">
+                    <h3>Labneh Sandwich</h3>
+                    <p>Labneh with oregano, tomato, cucumber, olives, lettuce, and olive oil.</p>
+                    <p class="calories">Calories: 150, Protein: 9g</p>
+                    <p class="price">2.5 $</p>
+                </div>
+            </div>
+            <div class="menu-item">
+                <img src="images/omlete.jpg" alt="Omelette Sandwich">
+                <div class="item-info">
+                    <h3>Omelette Sandwich</h3>
+                    <p>Omelette with mayo, turkey, tomato, and pickles.</p>
+                    <p class="calories">Calories: 240, Protein: 18g</p>
+                    <p class="price">3 $</p>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- Dinner Chicken Section -->
+        <section id="dinner_chicken">
+            <h2>Dinner Chicken</h2>
+            <div class="menu-item">
+             <img src="images/doublecrunch.jpeg" alt="Double Crunch">
+             <div class="item-info">
+            <h3>Double Crunch</h3>
+            <p>Breaded fried chicken, Kashkawan cheese, turkey, cocktail sauce — served with coleslaw.</p>
+            <p class="calories">Calories: 600, Protein: 36g</p>
+            <p class="price">9 $</p>
+            </div>
+            </div>
+
+            <div class="menu-item">
+                <img src="images/cheesetawook.jpeg" alt="Fajita">
+                <div class="item-info">
+                    <h3>Cheesy Tawook</h3>
+                    <p>Garlic,mayo,pickles,extra cheese,corn,iceberg</p>
+                    <p class="calories">Calories: 460, Protein: 27g</p>
+                    <p class="price">6.5 $</p>
+                </div>
+            </div>
+            <div class="menu-item">
+                <img src="images/fajita.jpg" alt="Fajita">
+                <div class="item-info">
+                    <h3>Fajita</h3>
+                    <p>Mushroom, onions, green peppers, mozzarella cheese, guacamole sauce, lettuce, mayo.</p>
+                    <p class="calories">Calories: 350, Protein: 24g</p>
+                    <p class="price">6.3 $</p>
+                </div>
+            </div>
+            <div class="menu-item">
+                <img src="images/fajita.jpg" alt="Spicy Fajita">
+                <div class="item-info">
+                    <h3>Spicy Fajita</h3>
+                    <p>Mushroom, onions, green peppers, mozzarella cheese, guacamole sauce, lettuce, mayo, spicy sauce.</p>
+                    <p class="calories">Calories: 360, Protein: 24g</p>
+                    <p class="price">6.3 $</p>
+                </div>
+            </div>
+            <div class="menu-item">
+                <img src="images/chicken-bbq.jpg" alt="Chicken BBQ">
+                <div class="item-info">
+                    <h3>Chicken BBQ</h3>
+                    <p>Chicken  with lettuce, pickles, mayo, chips, and BBQ sauce.</p>
+                    <p class="calories">Calories: 350, Protein: 27g</p>
+                    <p class="price">6.3 $</p>
+                </div>
+            </div>
+            <div class="menu-item">
+                <img src="images/CHICKEN-SUB.jpg" alt="Chicken Sub">
+                <div class="item-info">
+                    <h3>Chicken Sub</h3>
+                    <p>Chicken sub with lettuce, pickles, mayo, corn, soy sauce, and mozzarella cheese.</p>
+                    <p class="calories">Calories: 350, Protein: 24g</p>
+                    <p class="price">5.5 $</p>
+                </div>
+            </div>
+            <div class="menu-item">
+                <img src="images/pepito.jpg" alt="Pepito">
+                <div class="item-info">
+                    <h3>Pepito</h3>
+                    <p>Turkey, mozzarella cheese, chips, mustard, ketchup, mayo, BBQ sauce, Guasacaca sauce, and lettuce.</p>
+                    <p class="calories">Calories: 340, Protein: 27g</p>
+                    <p class="price">6.3 $</p>
+                </div>
+            </div>
+            <div class="menu-item">
+                <img src="images/boneless_bbq.jpg" alt="Boneless BBQ">
+                <div class="item-info">
+                    <h3>Boneless BBQ</h3>
+                    <p>Boneless BBQ with cheddar, chips, mayo, and BBQ sauce.</p>
+                    <p class="calories">Calories: 340, Protein: 25g</p>
+                    <p class="price">5.9 $</p>
+                </div>
+            </div>
+            <div class="menu-item">
+                <img src="images/Chickens.JPG" alt="Chicken Turkish Shawarma">
+                <div class="item-info">
+                    <h3>Chicken Turkish Shawarma</h3>
+                    <p>Chicken, garlic, pickles, Turkish sauce, tomato, onion, and red cabbage.</p>
+                    <p class="calories">Calories: 600, Protein: 36g</p>
+                    <p class="price">6 $</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Dinner Beef Section -->
+        <section id="dinner_beef">
+            <h2>Dinner Beef</h2>
+            <div class="menu-item">
+                <img src="images/philly.jpg" alt="Philadelphia">
+                <div class="item-info">
+                    <h3>Philadelphia</h3>
+                    <p>Philadelphia with onions, mushroom, green peppers, mozzarella cheese, lettuce, and mayo.</p>
+                    <p class="calories">Calories: 400, Protein: 27g</p>
+                    <p class="price">6.6 $</p>
+                </div>
+            </div>
+            <div class="menu-item">
+                <img src="images/cheasy-spicy-beef.jpg" alt="Cheesy Spicy Beef">
+                <div class="item-info">
+                    <h3>Cheesy Spicy Beef</h3>
+                    <p>Cheesy spicy beef with onions, mushroom, green peppers, mozzarella, cheddar, lettuce, and spicy mix.</p>
+                    <p class="calories">Calories: 350, Protein: 25g</p>
+                    <p class="price">7 $</p>
+                </div>
+            </div>
+            <div class="menu-item">
+                <img src="images/Beefs.JPG" alt="Beef Turkish Shawarma">
+                <div class="item-info">
+                    <h3>Beef Turkish Shawarma</h3>
+                    <p>Beef, pickles, Turkish sauce, tomato, onion, and red cabbage.</p>
+                    <p class="calories">Calories: 600, Protein: 36g</p>
+                    <p class="price">6.3 $</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Burgers Section -->
+        <section id="burgers">
+            <h2>Burgers</h2>
+            <div class="menu-item">
+                <img src="images/beef-burger.jpg" alt="Beef Burger">
+                <div class="item-info">
+                    <h3>Beef Burger</h3>
+                    <p>Beef burger with iceberg, tomato, onions, cheddar cheese, mushroom, mustard, ketchup, BBQ, and pickles.</p>
+                    <p class="calories">Calories: 650, Protein: 30g</p>
+                    <p class="price">5.8 $</p>
+                </div>
+            </div>
+            <div class="menu-item">
+                <img src="images/double-beef-burger.jpg" alt="Double Beef Burger">
+                <div class="item-info">
+                    <h3>Double Beef Burger</h3>
+                    <p>Double beef burger with iceberg, caramelized onions, onion rings, mozzarella, BBQ sauce, and special mix.</p>
+                    <p class="calories">Calories: 550, Protein: 43g</p>
+                    <p class="price">8 $</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Meals Section -->
+        <section id="meals">
+            <h2>Meals</h2>
+            <div class="menu-item">
+                <img src="images/crispy_meal.jpg" alt="Crispy Meal">
+                <div class="item-info">
+                    <h3>Crispy Meal</h3>
+                    <p>5 crispy strips, fries box, cheddar dip, cheddar, barbecue, and garlic.</p>
+                    <p class="calories">Calories: 600, Protein: 30g</p>
+                    <p class="price">8 $</p>
+                </div>
+            </div>
+            <div class="menu-item">
+                <img src="images/crispy_meal.jpg" alt="Crispy Kids Meal">
+                <div class="item-info">
+                    <h3>Crispy Kids Meal</h3>
+                    <p>3 crispy strips, fries box, ketchup, garlic, and pickles.</p>
+                    <p class="calories">Calories: 500, Protein: 22g</p>
+                    <p class="price">5 $</p>
+                </div>
+            </div>
+        </section>
+         <section id="healthy_meals">
+            <h2>Healthy Meals</h2>
+            <div class="menu-item">
+                <img src="images/healthychickenbreast.jpeg" alt="Cheese Croissant">
+                <div class="item-info">
+                    <h3>Protein Rush</h3>
+                    <p>240g of grilled chicken, 150g of mashed potatoes, 150g of vegetables, 200g of salad.</p>
+                    <p class="calories">Calories: 600, Protein: 75g</p>
+                    <p class="price">9 $</p>
+                </div>
+            </div>
+         </section>
+        <!-- Appetizers Section -->
+        <section id="appetizers">
+            <h2>Appetizers</h2>
+
+            <div class="menu-item">
+                <img src="images/cesar.jpeg" alt="Chicken Caesar Salad">
+                <div class="item-info">
+                    <h3>Chicken Caesar Salad</h3>
+                    <p>Lettuce, chicken breast, Parmesan cheese, croutons, and Caesar dressing.</p>
+                    <p class="calories">Calories: 350, Protein: 30g</p>
+                    <p class="price">5.5 $</p>
+                </div>
+            </div>
+            <div class="menu-item">
+                <img src="images/fries.jpg" alt="Fries Box">
+                <div class="item-info">
+                    <h3>Fries Box</h3>
+                    <p>Crispy fries served in a box.</p>
+                    <p class="calories">Calories: 260, Protein: 3g</p>
+                    <p class="price">2.77 $</p>
+                </div>
+            </div>
+            <div class="menu-item">
+                <img src="images/CurlyFries.jpeg" alt="Fries Box">
+                <div class="item-info">
+                    <h3>Curly Fries Box</h3>
+                    <p>Crispy Curly fries served in a box.</p>
+                    <p class="calories">Calories: 290, Protein: 3g</p>
+                    <p class="price">4.5 $</p>
+                </div>
+            </div>
+            <div class="menu-item">
+                <img src="images/Mozerellasticks1.jpeg" alt="Fries Box">
+                <div class="item-info">
+                    <h3>Mozzarella Sticks(4 pcs)</h3>
+                    <p>Cheesy Mozerella Sticks.</p>
+                    <p class="calories">Calories: 400, Protein: 19g</p>
+                    <p class="price">4 $</p>
+                </div>
+            </div>
+            <div class="menu-item">
+                <img src="images/onion-rings-box.webp" alt="Onion Rings Box">
+                <div class="item-info">
+                    <h3>Onion Rings Box</h3>
+                    <p>Crispy onion rings served in a box.</p>
+                    <p class="calories">Calories: 250, Protein: 3g</p>
+                    <p class="price">2.5 $</p>
+                </div>
+            </div>
+            <div class="menu-item">
+                <img src="images/loaded_fries.webp" alt="Loaded Fries">
+                <div class="item-info">
+                    <h3>Loaded Fries</h3>
+                    <p>Fries loaded with cheese, bacon, and toppings.</p>
+                    <p class="calories">Calories: 550, Protein: 15g</p>
+                    <p class="price">7.5 $</p>
+                </div>
+            </div>
+            
+        </section>
+
+        <!-- Side Orders Section -->
+        <section id="side_orders">
+            <h2>Side Orders</h2>
+            <div class="menu-item">
+                <img src="images/cheddar.jpg" alt="Cheddar Dip">
+                <div class="item-info">
+                    <h3>Cheddar Dip</h3>
+                    <p>Creamy cheddar dip.</p>
+                    <p class="calories">Calories: 40</p>
+                    <p class="price">0.4 $</p>
+                </div>
+            </div>
+            <div class="menu-item">
+                <img src="images/bbq.jpg" alt="BBQ Dip">
+                <div class="item-info">
+                    <h3>BBQ Dip</h3>
+                    <p>Tangy BBQ dip.</p>
+                    <p class="calories">Calories: 40</p>
+                    <p class="price">0.4 $</p>
+                </div>
+            </div>
+            <div class="menu-item">
+                <img src="images/mayo.jpg" alt="Mayo Dip">
+                <div class="item-info">
+                    <h3>Mayo Dip</h3>
+                    <p>Creamy mayo dip.</p>
+                    <p class="calories">Calories: 40</p>
+                    <p class="price">0.4 $</p>
+                </div>
+            </div>
+            <div class="menu-item">
+                <img src="images/mustard.jpg" alt="Mayo Mustard Dip">
+                <div class="item-info">
+                    <h3>Mayo Mustard Dip</h3>
+                    <p>Mayo and mustard dip.</p>
+                    <p class="calories">Calories: 40</p>
+                    <p class="price">0.4 $</p>
+                </div>
+            </div>
+            <div class="menu-item">
+                <img src="images/guacamole_dip.jpg" alt="Guacamole Dip">
+                <div class="item-info">
+                    <h3>Guacamole Dip</h3>
+                    <p>Fresh guacamole dip.</p>
+                    <p class="calories">Calories: 40</p>
+                    <p class="price">0.4 $</p>
+                </div>
+            </div>
+            <div class="menu-item">
+                <img src="images/pesto.jpg" alt="Pesto Dip">
+                <div class="item-info">
+                    <h3>Pesto Dip</h3>
+                    <p>Basil pesto dip.</p>
+                    <p class="calories">Calories: 40</p>
+                    <p class="price">0.5 $</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Drinks Section -->
+        <section id="drinks">
+            <h2>Drinks</h2>
+            <div class="menu-item">
+                <img src="images/pepsi.jpg" alt="Pepsi Can">
+                <div class="item-info">
+                    <h3>Pepsi Can</h3>
+                    <p>Refreshing Pepsi in a can.</p>
+                    <p class="calories">Calories: 150</p>
+                    <p class="price">1.1 $</p>
+                </div>
+            </div>
+            <div class="menu-item">
+                <img src="images/iced_tea.jpg" alt="Iced Tea">
+                <div class="item-info">
+                    <h3>Iced Tea</h3>
+                    <p>Cool and refreshing iced tea.</p>
+                    <p class="calories">Calories: 90</p>
+                    <p class="price">1.1 $</p>
+                </div>
+            </div>
+            <div class="menu-item">
+                <img src="images/tropicana.jpg" alt="Tropicana">
+                <div class="item-info">
+                    <h3>Tropicana</h3>
+                    <p>Fresh Tropicana juice.</p>
+                    <p class="calories">Calories: 120</p>
+                    <p class="price">0.47 $</p>
+                </div>
+            </div>
+            <div class="menu-item">
+                <img src="images/mr_juicy.jpg" alt="Mr. Juicy">
+                <div class="item-info">
+                    <h3>Mr. Juicy</h3>
+                    <p>Fruit juice blend.</p>
+                    <p class="calories">Calories: 110</p>
+                    <p class="price">0.3 $</p>
+                </div>
+            </div>
+            <div class="menu-item">
+                <img src="images/ayran.jpg" alt="Ayran">
+                <div class="item-info">
+                    <h3>Ayran</h3>
+                    <p>Traditional yogurt drink.</p>
+                    <p class="calories">Calories: 60</p>
+                    <p class="price">1.1 $</p>
+                </div>
+            </div>
+            <div class="menu-item">
+                <img src="images/water.jpg" alt="Water">
+                <div class="item-info">
+                    <h3>Water</h3>
+                    <p>Pure drinking water.</p>
+                    <p class="calories">Calories: 0</p>
+                    <p class="price">0.3 $</p>
+                </div>
+            </div>
+        </section>
+        <section id="desserts">
+            <h2>Desserts</h2>
+            <div class="menu-item">
+                <img src="images/kunafa.jpeg" alt="Kunafa Pistachio">
+                <div class="item-info">
+                    <h3>Kunafa Pistachio</h3>
+
+                    <p class="price">4.5 $</p>
+                </div>
+            </div>
+
+            <div class="menu-item">
+                <img src="images/tart.webp" alt="Tarts">
+                <div class="item-info">
+                    <h3>TARTS</h3>
+
+                    <p class="price">3.9 $</p>
+                </div>
+            </div>
+
+            <div class="menu-item">
+                <img src="images/cheesecake.webp" alt="Cheesecakes">
+                <div class="item-info">
+                    <h3>CHEESECAKES</h3>
+                    <p class="price">3.9 $</p>
+                </div>
+            </div>
+
+<!--             <div class="menu-item">
+                <img src="images/galaxycake.jpg" alt="Galaxy Cake">
+                <div class="item-info">
+                    <h3>GALAXY CAKE</h3>
+                    <p class="price">0.8 $</p>
+                </div>
+            </div>
+
+            <div class="menu-item">
+                <img src="images/chocomoo.jfif" alt="Mousse Chocolate">
+                <div class="item-info">
+                    <h3>MOUSSE CHOCOLATE</h3>
+                    <p class="price">3.33 $</p>
+                </div>
+            </div> -->
+
+<!--             <div class="menu-item">
+                <img src="images/specialcake.jpg" alt="Special Cakes">
+                <div class="item-info">
+                    <h3>SPECIAL CAKES</h3>
+                    <p class="price">3.9 $</p>
+                </div>
+            </div>
+
+            <div class="menu-item">
+                <img src="images/lotuscroissant.jpeg" alt="Lotus Croissant">
+                <div class="item-info">
+                    <h3>LOTUS CROISSANT</h3>
+                    <p class="price">3.9 $</p>
+                </div>
+            </div> -->
+
+<!--             <div class="menu-item">
+                <img src="images/choccroissant.jpeg" alt="Oreo Croissant">
+                <div class="item-info">
+                    <h3>OREO CROISSANT</h3>
+                    <p class="price">3.9 $</p>
+                </div>
+            </div> -->
+
+            <div class="menu-item">
+                <img src="images/chocosandwich.avif" alt="Nutella Sandwich">
+                <div class="item-info">
+                    <h3>NUTELLA SANDWICH</h3>
+                    <p class="price">3 $</p>
+                </div>
+            </div>
+
+            <div class="menu-item">
+                <img src="images/lotussand.jfif" alt="Lotus Sandwich">
+                <div class="item-info">
+                    <h3>LOTUS SANDWICH</h3>
+                    <p class="price">3 $</p>
+                </div>
+            </div>
+
+        </section>
+        <!-- Mini Bites Section -->
+        <section id="mini">
+            <h2>Mini Bites (5 PCS/Portion)</h2>
+            <div class="menu-item">
+                <img src="images/minibtes.jpeg" alt="Turkey and Cheese Mini Bites">
+                <div class="item-info">
+                    <h3>Turkey and Cheese Mini Bites</h3>
+                    <p>Mini bites filled with turkey and cheese.</p>
+                    <p class="calories">Calories: 240, Protein: 22g</p>
+                    <p class="price">6.5 $</p>
+                </div>
+            </div>
+            <div class="menu-item">
+                <img src="images/minibtes.jpeg" alt="Grilled Halloumi Mini Bites">
+                <div class="item-info">
+                    <h3>Grilled Halloumi Mini Bites</h3>
+                    <p>Mini bites filled with grilled halloumi.</p>
+                    <p class="calories">Calories: 350, Protein: 22g</p>
+                    <p class="price">6 $</p>
+                </div>
+            </div>
+            <div class="menu-item">
+                <img src="images/minibtes.jpeg" alt="Labneh Mini Bites">
+                <div class="item-info">
+                    <h3>Labneh Mini Bites</h3>
+                    <p>Mini bites filled with labneh.</p>
+                    <p class="calories">Calories: 150, Protein: 9g</p>
+                    <p class="price">6 $</p>
+                </div>
+            </div>
+            <div class="menu-item">
+                <img src="images/minibtes.jpeg" alt="Omelette Mini Bites">
+                <div class="item-info">
+                    <h3>Omelette Mini Bites</h3>
+                    <p>Mini bites filled with omelette.</p>
+                    <p class="calories">Calories: 240, Protein: 18g</p>
+                    <p class="price">6 $</p>
+                </div>
+            </div>
+            <div class="menu-item">
+                <img src="images/minibtes.jpeg" alt="Fajita Mini Bites">
+                <div class="item-info">
+                    <h3>Fajita Mini Bites</h3>
+                    <p>Mini bites filled with fajita.</p>
+                    <p class="calories">Calories: 350, Protein: 24g</p>
+                    <p class="price">7 $</p>
+                </div>
+            </div>
+            <div class="menu-item">
+                <img src="images/minibtes.jpeg" alt="Spicy Fajita Mini Bites">
+                <div class="item-info">
+                    <h3>Spicy Fajita Mini Bites</h3>
+                    <p>Mini bites filled with spicy fajita.</p>
+                    <p class="calories">Calories: 360, Protein: 24g</p>
+                    <p class="price">7 $</p>
+                </div>
+            </div>
+            <div class="menu-item">
+                <img src="images/minibtes.jpeg" alt="Chicken BBQ Mini Bites">
+                <div class="item-info">
+                    <h3>Chicken BBQ Mini Bites</h3>
+                    <p>Mini bites filled with chicken BBQ.</p>
+                    <p class="calories">Calories: 350, Protein: 27g</p>
+                    <p class="price">7 $</p>
+                </div>
+            </div>
+            <div class="menu-item">
+                <img src="images/minibtes.jpeg" alt="Chicken Sub Mini Bites">
+                <div class="item-info">
+                    <h3>Chicken Sub Mini Bites</h3>
+                    <p>Mini bites filled with chicken sub.</p>
+                    <p class="calories">Calories: 350, Protein: 24g</p>
+                    <p class="price">6.75 $</p>
+                </div>
+            </div>
+            <div class="menu-item">
+                <img src="images/minibtes.jpeg" alt="Pepito Mini Bites">
+                <div class="item-info">
+                    <h3>Pepito Mini Bites</h3>
+                    <p>Mini bites filled with pepito.</p>
+                    <p class="calories">Calories: 340, Protein: 27g</p>
+                    <p class="price">7.5 $</p>
+                </div>
+            </div>
+            <div class="menu-item">
+                <img src="images/minibtes.jpeg" alt="Boneless BBQ Mini Bites">
+                <div class="item-info">
+                    <h3>Boneless BBQ Mini Bites</h3>
+                    <p>Mini bites filled with boneless BBQ.</p>
+                    <p class="calories">Calories: 340, Protein: 25g</p>
+                    <p class="price">8 $</p>
+                </div>
+            </div>
+            <div class="menu-item">
+                <img src="images/minibtes.jpeg" alt="Philadelphia Mini Bites">
+                <div class="item-info">
+                    <h3>Philadelphia Mini Bites</h3>
+                    <p>Mini bites filled with Philadelphia.</p>
+                    <p class="calories">Calories: 400, Protein: 27g</p>
+                    <p class="price">7.5 $</p>
+                </div>
+            </div>
+            <div class="menu-item">
+                <img src="images/minibtes.jpeg" alt="Beef Burger Mini Bites">
+                <div class="item-info">
+                    <h3>Beef Burger Mini Bites</h3>
+                    <p>Mini bites filled with beef burger.</p>
+                    <p class="calories">Calories: 650, Protein: 30g</p>
+                    <p class="price">7.5 $</p>
+                </div>
+            </div>
+            <div class="menu-item">
+                <img src="images/minibtes.jpeg" alt="Cheesy Spicy Beef Mini Bites">
+                <div class="item-info">
+                    <h3>Cheesy Spicy Beef Mini Bites</h3>
+                    <p>Mini bites filled with cheesy spicy beef.</p>
+                    <p class="calories">Calories: 350, Protein: 25g</p>
+                    <p class="price">11.65 $</p>
+                </div>
+            </div>
+            <div class="menu-item">
+                <img src="images/minibtes.jpeg" alt="Chicken Shawrma">
+                <div class="item-info">
+                    <h3>Chicken Shawrma Mini Bites</h3>
+                    <p>Mini bites filled with chicken shawrma.</p>
+                    <p class="calories">Calories: 300, Protein: 23g</p>
+                    <p class="price">7.5 $</p>
+                </div>
+            </div>
+             <div class="menu-item">
+                <img src="images/minibtes.jpeg" alt="Beef Shawrma">
+                <div class="item-info">
+                    <h3>Beef Shawrma Mini Bites</h3>
+                    <p>Mini bites filled with beef shawrma.</p>
+                    <p class="calories">Calories: 270, Protein: 20g</p>
+                    <p class="price">7.5 $</p>
+                </div>
+            </div>
+            <div class="menu-item">
+                <img src="images/minibtes.jpeg" alt="Cheesy Tawook">
+                <div class="item-info">
+                    <h3>Cheesy Tawook Mini Bites</h3>
+                    <p>Mini bites filled with tawook and cheese.</p>
+                    <p class="calories">Calories: 340, Protein: 24g</p>
+                    <p class="price">8 $</p>
+                </div>
+            </div>
+            <div class="menu-item">
+                <img src="images/minibtes.jpeg" alt="Nutella">
+                <div class="item-info">
+                    <h3>Nutella Mini Bites</h3>
+                    <p>Mini bites filled with nutella.</p>
+                    <p class="calories">Calories: 400, Protein: 10g</p>
+                    <p class="price">5.5 $</p>
+                </div>
+            </div>
+             <div class="menu-item">
+                <img src="images/minibtes.jpeg" alt="Lotus">
+                <div class="item-info">
+                    <h3>Lotus Mini Bites</h3>
+                    <p>Mini bites filled with lotus.</p>
+                    <p class="calories">Calories: 420, Protein: 8g</p>
+                    <p class="price">5.5 $</p>
+                </div>
+            </div>
+        </section>
+        </div>
+        <aside id="cart"></aside>
+    </main>
+<div class="sticky-note">
+  <span class="icon">🥐</span>
+  MAKE IT COMBO FOR ONLY 3 $
+</div>
+    <footer>
+        <p>Every Dish is a Work of Art; Choose Your Masterpiece!</p>
+    </footer>
+
+    <script src="ui.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
+
+
+
+
+
