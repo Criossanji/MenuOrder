@@ -167,22 +167,50 @@
       }
       locationBtn.textContent = '⏳ Getting location...';
       locationBtn.disabled = true;
+
+      function onSuccess(pos){
+        const lat = pos.coords.latitude;
+        const lng = pos.coords.longitude;
+        const mapLink = `https://maps.google.com/?q=${lat},${lng}`;
+        const current = (addressInput.value || '').trim();
+        addressInput.value = current ? current + '\n' + mapLink : mapLink;
+        locationBtn.textContent = '📍 Use My Location';
+        locationBtn.disabled = false;
+      }
+
+      function onError(err){
+        // If high-accuracy failed, retry with low accuracy as fallback
+        if(err.code === err.TIMEOUT || err.code === err.POSITION_UNAVAILABLE){
+          navigator.geolocation.getCurrentPosition(
+            onSuccess,
+            finalError,
+            { enableHighAccuracy: false, timeout: 20000, maximumAge: 300000 }
+          );
+          return;
+        }
+        finalError(err);
+      }
+
+      function finalError(err){
+        locationBtn.textContent = '📍 Use My Location';
+        locationBtn.disabled = false;
+        if(err.code === err.PERMISSION_DENIED){
+          alert(
+            'Location permission denied.\n\n' +
+            'To enable it:\n' +
+            '• iPhone: Go to Settings → Safari → Location → set to "Allow"\n' +
+            '• Android: Tap the lock icon in the address bar → Permissions → Location → Allow'
+          );
+        } else {
+          alert('Could not get your location. Please make sure Location Services are turned on in your device settings and try again.');
+        }
+      }
+
+      // First try with high accuracy, generous timeout for mobile
       navigator.geolocation.getCurrentPosition(
-        (pos) => {
-          const lat = pos.coords.latitude;
-          const lng = pos.coords.longitude;
-          const mapLink = `https://maps.google.com/?q=${lat},${lng}`;
-          const current = (addressInput.value || '').trim();
-          addressInput.value = current ? current + '\n' + mapLink : mapLink;
-          locationBtn.textContent = '📍 Use My Location';
-          locationBtn.disabled = false;
-        },
-        () => {
-          alert('Could not get your location. Please enter your address manually.');
-          locationBtn.textContent = '📍 Use My Location';
-          locationBtn.disabled = false;
-        },
-        { enableHighAccuracy: true, timeout: 10000 }
+        onSuccess,
+        onError,
+        { enableHighAccuracy: true, timeout: 20000, maximumAge: 60000 }
       );
     });
 
