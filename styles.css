@@ -63,8 +63,8 @@ h2{margin:10px 0 6px;font-size:26px;font-family:Skincake,Poppins,sans-serif;colo
 .btn-wa{background:var(--c-deepgreen)}
 .add-btn{background:var(--c-deepgreen)!important;color:var(--c-cream)!important;-webkit-tap-highlight-color:transparent}
 
-/* ── MAKE IT COMBO sticky banner ── */
-.sticky-note{position:fixed;right:12px;bottom:12px;z-index:25;background:var(--c-cream);border:2px solid var(--c-darkred);border-radius:12px;padding:10px 14px;display:flex;gap:8px;align-items:center;color:var(--c-darkred);font-weight:800;font-size:13px;box-shadow:0 4px 16px rgba(0,0,0,.3);max-width:220px}
+/* ── MAKE IT COMBO bottom banner ── */
+.combo-banner{margin:14px auto 0;width:calc(100% - 20px);max-width:560px;background:var(--c-cream);border:2px solid var(--c-darkred);border-radius:12px;padding:10px 14px;display:flex;gap:8px;align-items:center;justify-content:center;color:var(--c-darkred);font-weight:800;font-size:13px;box-shadow:0 4px 16px rgba(0,0,0,.2)}
 
 /* ── Floating cart button (mobile) ── */
 .floating-cart-btn{position:fixed;bottom:70px;right:12px;z-index:25;width:50px;height:50px;border-radius:50%;border:2px solid var(--c-cream);background:var(--c-deepgreen);color:var(--c-cream);font-size:22px;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,.35);-webkit-tap-highlight-color:transparent}
@@ -98,7 +98,7 @@ footer{padding:14px;color:var(--c-cream);text-align:center;font-size:13px;opacit
 .gallery-section h2{text-align:center;margin-bottom:4px;font-size:24px}
 .gallery-subtitle{text-align:center;color:var(--c-cream);opacity:.7;font-size:12px;margin:0 0 12px}
 .gallery-overflow{overflow:hidden;border-radius:12px}
-.gallery-track{display:flex;gap:10px;animation:galleryScroll 25s linear infinite;width:max-content}
+.gallery-track{display:flex;gap:10px;animation:galleryScroll 55s linear infinite;width:max-content}
 @keyframes galleryScroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
 .gallery-item{flex:0 0 160px;height:120px;border-radius:10px;overflow:hidden;border:2px solid var(--c-cream);position:relative}
 .gallery-item img{width:100%;height:100%;object-fit:cover}
@@ -194,6 +194,6 @@ footer{padding:14px;color:var(--c-cream);text-align:center;font-size:13px;opacit
   .page-content p{font-size:13px}
   .map-wrap iframe{height:200px}
   .gallery-item{flex:0 0 130px;height:100px}
-  .sticky-note{font-size:12px;padding:8px 10px;max-width:180px;right:10px;bottom:10px}
+  .combo-banner{font-size:12px;padding:8px 10px;width:calc(100% - 16px)}
   .floating-cart-btn{bottom:60px;right:10px;width:46px;height:46px;font-size:20px}
 }
