@@ -24,7 +24,9 @@
     const desc = card.querySelector('.item-info p:not(.calories):not(.price)')?.textContent?.trim() || '';
     const price = parsePrice(card.querySelector('.price')?.textContent || '0');
     const img = card.querySelector('img')?.getAttribute('src') || '';
-    return { id: name, name, desc, price, img };
+    const section = card.closest('section');
+    const category = section ? section.id : '';
+    return { id: name, name, desc, price, img, category };
   }
 
   const CART_KEY = 'croissanji_cart_v1';
@@ -75,11 +77,14 @@
       return;
     }
     const COMBO_PRICE = 3;
+    const NO_COMBO_CATEGORIES = ['drinks', 'desserts'];
     const lines = entries.map(item => {
       const unitPrice = item.price + (item.combo ? COMBO_PRICE : 0);
       const lineTotal = item.qty * unitPrice;
       const comboLabel = item.combo ? ' <span style="color:#22c55e;font-size:11px;font-weight:700">COMBO</span>' : '';
-      return `\n        <div class="cart-line" data-id="${item.id}">\n          <div style="flex:1;min-width:0">\n            <div style="font-weight:600">${item.name}${comboLabel}</div>\n            <div class="muted" style="font-size:12px;color:#b9bec7">$${toMoney(unitPrice)} × ${item.qty}</div>\n            <button class="combo-toggle" style="margin-top:4px;font-size:11px;padding:3px 8px;border-radius:8px;border:1px solid var(--c-darkred);background:${item.combo ? 'var(--c-darkred)' : 'var(--c-cream)'};color:${item.combo ? 'var(--c-cream)' : 'var(--c-darkred)'};cursor:pointer;font-weight:600">${item.combo ? '✓ Combo (+$3)' : 'Make it Combo +$3'}</button>\n          </div>\n          <div class="qty">\n            <button class="dec">-</button>\n            <input class="qty-input" type="number" min="0" max="99" value="${item.qty}">\n            <button class="inc">+</button>\n          </div>\n          <div class="line-total">$${toMoney(lineTotal)}</div>\n        </div>`;
+      const showCombo = !NO_COMBO_CATEGORIES.includes(item.category);
+      const comboBtn = showCombo ? `<button class="combo-toggle" style="margin-top:4px;font-size:11px;padding:3px 8px;border-radius:8px;border:1px solid var(--c-darkred);background:${item.combo ? 'var(--c-darkred)' : 'var(--c-cream)'};color:${item.combo ? 'var(--c-cream)' : 'var(--c-darkred)'};cursor:pointer;font-weight:600">${item.combo ? '✓ Combo (+$3)' : 'Make it Combo +$3'}</button>` : '';
+      return `\n        <div class="cart-line" data-id="${item.id}">\n          <div style="flex:1;min-width:0">\n            <div style="font-weight:600">${item.name}${comboLabel}</div>\n            <div class="muted" style="font-size:12px;color:#b9bec7">$${toMoney(unitPrice)} × ${item.qty}</div>\n            ${comboBtn}\n          </div>\n          <div class="qty">\n            <button class="dec">-</button>\n            <input class="qty-input" type="number" min="0" max="99" value="${item.qty}">\n            <button class="inc">+</button>\n          </div>\n          <div class="line-total">$${toMoney(lineTotal)}</div>\n        </div>`;
     }).join('');
     const subtotal = entries.reduce((s, it) => s + it.qty * (it.price + (it.combo ? COMBO_PRICE : 0)), 0);
     container.innerHTML = `\n      <div class="cart">\n        <h3>Your Cart</h3>\n        ${lines}\n        <div class="cart-summary">\n          <div style="display:flex;justify-content:space-between;margin-top:4px">\n            <div>Subtotal</div><div style="font-weight:700">$${toMoney(subtotal)}</div>\n          </div>\n          <div class="checkout">\n            <button class="btn-clear" id="clearCart">Clear</button>\n            <button class="btn-wa" id="checkoutWa">Checkout</button>\n          </div>\n        </div>\n      </div>`;
