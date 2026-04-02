@@ -84,7 +84,7 @@
       const comboLabel = item.combo ? ' <span style="color:#22c55e;font-size:11px;font-weight:700">COMBO</span>' : '';
       const showCombo = !NO_COMBO_CATEGORIES.includes(item.category);
       const comboBtn = showCombo ? `<button class="combo-toggle" style="margin-top:4px;font-size:11px;padding:3px 8px;border-radius:8px;border:1px solid var(--c-darkred);background:${item.combo ? 'var(--c-darkred)' : 'var(--c-cream)'};color:${item.combo ? 'var(--c-cream)' : 'var(--c-darkred)'};cursor:pointer;font-weight:600">${item.combo ? '✓ Combo (+$3)' : 'Make it Combo +$3'}</button>` : '';
-      return `\n        <div class="cart-line" data-id="${item.id}">\n          <div style="flex:1;min-width:0">\n            <div style="font-weight:600">${item.name}${comboLabel}</div>\n            <div class="muted" style="font-size:12px;color:#b9bec7">$${toMoney(unitPrice)} × ${item.qty}</div>\n            ${comboBtn}\n          </div>\n          <div class="qty">\n            <button class="dec">-</button>\n            <input class="qty-input" type="number" min="0" max="99" value="${item.qty}">\n            <button class="inc">+</button>\n          </div>\n          <div class="line-total">$${toMoney(lineTotal)}</div>\n        </div>`;
+      return `\n        <div class="cart-line" data-id="${item.id}">\n          <div style="flex:1;min-width:0">\n            <div style="font-weight:600">${item.name}${comboLabel}</div>\n            <div class="muted" style="font-size:12px;color:#b9bec7">$${toMoney(unitPrice)} × ${item.qty}</div>\n            ${comboBtn}\n          </div>\n          <div class="qty">\n            <button class="dec">-</button>\n            <input class="qty-input" type="number" min="0" max="99" value="${item.qty}">\n            <button class="inc">+</button>\n          </div>\n          <div class="line-total">$${toMoney(lineTotal)}</div>\n          <button class="cart-delete" style="background:none;border:none;color:#ef4444;font-size:16px;cursor:pointer;padding:2px 6px;margin-left:4px;line-height:1" title="Remove item">&times;</button>\n        </div>`;
     }).join('');
     const subtotal = entries.reduce((s, it) => s + it.qty * (it.price + (it.combo ? COMBO_PRICE : 0)), 0);
     container.innerHTML = `\n      <div class="cart">\n        <h3>Your Cart</h3>\n        ${lines}\n        <div class="cart-summary">\n          <div style="display:flex;justify-content:space-between;margin-top:4px">\n            <div>Subtotal</div><div style="font-weight:700">$${toMoney(subtotal)}</div>\n          </div>\n          <div class="checkout">\n            <button class="btn-clear" id="clearCart">Clear</button>\n            <button class="btn-wa" id="checkoutWa">Checkout</button>\n          </div>\n        </div>\n      </div>`;
@@ -112,6 +112,9 @@
         cart[id].combo = !cart[id].combo;
         saveCart(cart);
         renderCart();
+      });
+      line.querySelector('.cart-delete')?.addEventListener('click', () => {
+        setQty(id, 0);
       });
     });
 
@@ -270,10 +273,25 @@
       const qtyInput = row.querySelector('.qty-input');
       row.querySelector('.minus')?.addEventListener('click',()=>{ qtyInput.value = String(Math.max(1, (parseInt(qtyInput.value||'1',10)||1)-1)); });
       row.querySelector('.plus')?.addEventListener('click',()=>{ qtyInput.value = String(Math.min(99, (parseInt(qtyInput.value||'1',10)||1)+1)); });
-      row.querySelector('.add-btn')?.addEventListener('click',()=>{
+      row.querySelector('.add-btn')?.addEventListener('click', function(){
+        const btn = this;
         const item = getItemFromCard(card);
         const qty = Math.max(1, parseInt(qtyInput.value||'1', 10)||1);
         addToCart(item, qty);
+        const orig = btn.textContent;
+        btn.textContent = 'Added ✓';
+        btn.style.background = '#166534';
+        btn.style.color = '#fff';
+        btn.style.transform = 'scale(1.08)';
+        btn.style.transition = 'all 0.2s ease';
+        btn.disabled = true;
+        setTimeout(() => {
+          btn.textContent = orig;
+          btn.style.background = '#22c55e';
+          btn.style.color = '#111';
+          btn.style.transform = 'scale(1)';
+          btn.disabled = false;
+        }, 900);
       });
     });
   }
