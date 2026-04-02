@@ -74,11 +74,14 @@
       container.innerHTML = '<div class="cart"><h3>Your Cart</h3><div class="cart-empty">Your cart is empty.</div></div>';
       return;
     }
+    const COMBO_PRICE = 3;
     const lines = entries.map(item => {
-      const lineTotal = item.qty * item.price;
-      return `\n        <div class="cart-line" data-id="${item.id}">\n          <div style="flex:1;min-width:0">\n            <div style="font-weight:600">${item.name}</div>\n            <div class="muted" style="font-size:12px;color:#b9bec7">$${toMoney(item.price)} × ${item.qty}</div>\n          </div>\n          <div class="qty">\n            <button class="dec">-</button>\n            <input class="qty-input" type="number" min="0" max="99" value="${item.qty}">\n            <button class="inc">+</button>\n          </div>\n          <div class="line-total">$${toMoney(lineTotal)}</div>\n        </div>`;
+      const unitPrice = item.price + (item.combo ? COMBO_PRICE : 0);
+      const lineTotal = item.qty * unitPrice;
+      const comboLabel = item.combo ? ' <span style="color:#22c55e;font-size:11px;font-weight:700">COMBO</span>' : '';
+      return `\n        <div class="cart-line" data-id="${item.id}">\n          <div style="flex:1;min-width:0">\n            <div style="font-weight:600">${item.name}${comboLabel}</div>\n            <div class="muted" style="font-size:12px;color:#b9bec7">$${toMoney(unitPrice)} × ${item.qty}</div>\n            <button class="combo-toggle" style="margin-top:4px;font-size:11px;padding:3px 8px;border-radius:8px;border:1px solid var(--c-darkred);background:${item.combo ? 'var(--c-darkred)' : 'var(--c-cream)'};color:${item.combo ? 'var(--c-cream)' : 'var(--c-darkred)'};cursor:pointer;font-weight:600">${item.combo ? '✓ Combo (+$3)' : 'Make it Combo +$3'}</button>\n          </div>\n          <div class="qty">\n            <button class="dec">-</button>\n            <input class="qty-input" type="number" min="0" max="99" value="${item.qty}">\n            <button class="inc">+</button>\n          </div>\n          <div class="line-total">$${toMoney(lineTotal)}</div>\n        </div>`;
     }).join('');
-    const subtotal = entries.reduce((s, it) => s + it.qty * it.price, 0);
+    const subtotal = entries.reduce((s, it) => s + it.qty * (it.price + (it.combo ? COMBO_PRICE : 0)), 0);
     container.innerHTML = `\n      <div class="cart">\n        <h3>Your Cart</h3>\n        ${lines}\n        <div class="cart-summary">\n          <div style="display:flex;justify-content:space-between;margin-top:4px">\n            <div>Subtotal</div><div style="font-weight:700">$${toMoney(subtotal)}</div>\n          </div>\n          <div class="checkout">\n            <button class="btn-clear" id="clearCart">Clear</button>\n            <button class="btn-wa" id="checkoutWa">Checkout</button>\n          </div>\n        </div>\n      </div>`;
 
     // Bind qty controls
@@ -98,6 +101,13 @@
         const v = parseInt(e.target.value || '0', 10);
         setQty(id, isNaN(v) ? 0 : v);
       });
+      line.querySelector('.combo-toggle')?.addEventListener('click', () => {
+        const cart = loadCart();
+        if(!cart[id]) return;
+        cart[id].combo = !cart[id].combo;
+        saveCart(cart);
+        renderCart();
+      });
     });
 
     $('#clearCart')?.addEventListener('click', clearCart);
@@ -114,12 +124,15 @@
       '🧾 *Order Details*',
       '------------------------------'
     ];
+    const COMBO_PRICE = 3;
     let subtotal = 0;
     lines.forEach((it, idx) => {
-      const lineTotal = it.qty * it.price;
+      const unitPrice = it.price + (it.combo ? COMBO_PRICE : 0);
+      const lineTotal = it.qty * unitPrice;
       subtotal += lineTotal;
-      parts.push(`${idx + 1}. *${it.name}*`);
-      parts.push(`   Qty: ${it.qty} × $${toMoney(it.price)} = $${toMoney(lineTotal)}`);
+      const comboTag = it.combo ? ' 🍟 *COMBO*' : '';
+      parts.push(`${idx + 1}. *${it.name}*${comboTag}`);
+      parts.push(`   Qty: ${it.qty} × $${toMoney(unitPrice)} = $${toMoney(lineTotal)}`);
     });
     parts.push(
       '------------------------------',
