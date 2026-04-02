@@ -67,7 +67,7 @@ h2{margin:10px 0 6px;font-size:26px;font-family:Skincake,Poppins,sans-serif;colo
 .combo-banner{margin:14px auto 0;width:calc(100% - 20px);max-width:560px;background:var(--c-cream);border:2px solid var(--c-darkred);border-radius:12px;padding:10px 14px;display:flex;gap:8px;align-items:center;justify-content:center;color:var(--c-darkred);font-weight:800;font-size:13px;box-shadow:0 4px 16px rgba(0,0,0,.2)}
 
 /* ── Floating cart button (mobile) ── */
-.floating-cart-btn{position:fixed;bottom:70px;right:12px;z-index:25;width:50px;height:50px;border-radius:50%;border:2px solid var(--c-cream);background:var(--c-deepgreen);color:var(--c-cream);font-size:22px;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,.35);-webkit-tap-highlight-color:transparent}
+.floating-cart-btn{position:fixed;bottom:12px;right:12px;z-index:25;width:50px;height:50px;border-radius:50%;border:2px solid var(--c-cream);background:var(--c-deepgreen);color:var(--c-cream);font-size:22px;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,.35);-webkit-tap-highlight-color:transparent}
 .cart-badge{position:absolute;top:-4px;right:-4px;background:var(--c-darkred);color:var(--c-cream);font-size:11px;font-weight:800;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid var(--c-cream)}
 
 /* ── Categories grid ── */
@@ -197,5 +197,5 @@ footer{padding:14px;color:var(--c-cream);text-align:center;font-size:13px;opacit
   .map-wrap iframe{height:200px}
   .gallery-item{flex:0 0 130px;height:100px}
   .combo-banner{font-size:12px;padding:8px 10px;width:calc(100% - 16px)}
-  .floating-cart-btn{bottom:60px;right:10px;width:46px;height:46px;font-size:20px}
+  .floating-cart-btn{bottom:12px;right:10px;width:46px;height:46px;font-size:20px}
 }
