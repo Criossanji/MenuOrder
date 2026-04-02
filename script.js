@@ -1,7 +1,7 @@
 (function(){
   const restaurantPhone = '96170673328';
   const ORDER_TYPE_KEY = 'croissanji_order_type_v1';
-  const PRICE_MULTIPLIER = 1.25;
+  const PRICE_MULTIPLIER = 1;
 
   const $$ = (sel, parent=document) => Array.from(parent.querySelectorAll(sel));
   const $ = (sel, parent=document) => parent.querySelector(sel);
