@@ -152,11 +152,40 @@
     const addressInput = $('#customerAddress');
     const phoneInput = $('#customerPhone');
     const notesInput = $('#customerNotes');
+    const locationBtn = $('#shareLocationBtn');
 
     const closeModal = () => modal.classList.add('hidden');
     const openModal = () => modal.classList.remove('hidden');
 
     backBtn?.addEventListener('click', closeModal);
+
+    // "Use My Location" button — gets GPS and fills a Google Maps link
+    locationBtn?.addEventListener('click', () => {
+      if(!navigator.geolocation){
+        alert('Geolocation is not supported by your browser.');
+        return;
+      }
+      locationBtn.textContent = '⏳ Getting location...';
+      locationBtn.disabled = true;
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          const lat = pos.coords.latitude;
+          const lng = pos.coords.longitude;
+          const mapLink = `https://maps.google.com/?q=${lat},${lng}`;
+          const current = (addressInput.value || '').trim();
+          addressInput.value = current ? current + '\n' + mapLink : mapLink;
+          locationBtn.textContent = '📍 Use My Location';
+          locationBtn.disabled = false;
+        },
+        () => {
+          alert('Could not get your location. Please enter your address manually.');
+          locationBtn.textContent = '📍 Use My Location';
+          locationBtn.disabled = false;
+        },
+        { enableHighAccuracy: true, timeout: 10000 }
+      );
+    });
+
     submitBtn?.addEventListener('click', () => {
       const customer = {
         name: (nameInput?.value || '').trim(),
