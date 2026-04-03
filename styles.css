@@ -98,7 +98,8 @@ footer{padding:14px;color:var(--c-cream);text-align:center;font-size:13px;opacit
 .gallery-section h2{text-align:center;margin-bottom:4px;font-size:24px}
 .gallery-subtitle{text-align:center;color:var(--c-cream);opacity:.7;font-size:12px;margin:0 0 12px}
 .gallery-overflow{overflow:hidden;border-radius:12px}
-.gallery-track{display:flex;gap:10px;animation:galleryScroll 55s linear infinite;width:max-content}
+.gallery-track{display:flex;gap:10px;animation:galleryScroll 90s linear infinite;animation-play-state:paused;width:max-content}
+.gallery-track.gallery-ready{animation-play-state:running}
 @keyframes galleryScroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
 .gallery-item{flex:0 0 160px;height:120px;border-radius:10px;overflow:hidden;border:2px solid var(--c-cream);position:relative}
 .gallery-item img{width:100%;height:100%;object-fit:cover}

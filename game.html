@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lucky Pick - Croissanji</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .game-wrap{max-width:560px;margin:20px auto;padding:0 12px;text-align:center}
+    .game-wrap h2{font-family:Skincake,Poppins,sans-serif;margin-bottom:4px}
+    .game-subtitle{color:var(--c-cream);opacity:.8;font-size:14px;margin-bottom:20px}
+    .cards-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:20px}
+    @media(max-width:500px){.cards-grid{grid-template-columns:repeat(3,1fr)}}
+    .flip-card{perspective:600px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+    .flip-card.revealed{pointer-events:none}
+    .flip-card.dimmed{opacity:.45;pointer-events:none}
+    .flip-inner{position:relative;width:100%;padding-top:140%;transition:transform .6s;transform-style:preserve-3d}
+    .flip-card.revealed .flip-inner{transform:rotateY(180deg)}
+    .flip-front,.flip-back{position:absolute;inset:0;border-radius:12px;backface-visibility:hidden;display:flex;align-items:center;justify-content:center;font-weight:800;border:2px solid var(--c-cream)}
+    .flip-front{background:var(--c-cream);color:var(--c-darkred);font-size:32px}
+    .flip-back{background:var(--c-deepgreen);color:var(--c-cream);transform:rotateY(180deg);flex-direction:column;padding:10px;text-align:center;font-size:13px;gap:4px}
+    .flip-back .prize-icon{font-size:28px}
+    .flip-back.loser{background:var(--c-darkred)}
+    .game-msg{font-size:16px;font-weight:700;color:var(--c-cream);min-height:24px;margin-bottom:14px}
+    .btn-replay{background:var(--c-deepgreen);color:var(--c-cream);border:none;border-radius:10px;padding:12px 24px;font-weight:800;font-size:14px;cursor:pointer;display:none;margin:0 auto}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-content">
+      <img src="images/logocroissanji.png" alt="Croissanji Logo" class="logo">
+      <button class="menu-toggle" data-menu-target="siteMenu" aria-label="Open menu">☰</button>
+    </div>
+    <p class="page-tag">Lucky Pick</p>
+    <nav class="top-links" id="siteMenu">
+      <a href="index.html">Menu Categories</a>
+      <a href="code.html">Full Menu</a>
+      <a href="about.html">About Us</a>
+      <a href="certifications.html">Certifications</a>
+      <a href="location.html">Location</a>
+      <a href="https://wa.me/96170673328" target="_blank" rel="noopener">WhatsApp</a>
+      <a href="https://www.instagram.com/croissanji/" target="_blank" rel="noopener">Instagram</a>
+      <a href="https://www.facebook.com/profile.php?id=100094430829983" target="_blank" rel="noopener">Facebook</a>
+    </nav>
+  </header>
+
+  <div class="game-wrap">
+    <h2>Pick Your Lucky Card</h2>
+    <p class="game-subtitle">Choose one card to reveal your prize!</p>
+    <div class="game-msg" id="gameMsg"></div>
+    <div class="cards-grid" id="cardsGrid"></div>
+    <button class="btn-replay" id="replayBtn">Play Again</button>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 Croissanji. All rights reserved.</p>
+  </footer>
+
+  <script>
+  (function(){
+    // Prizes are ONLY assigned at click-time, never stored in DOM
+    const PRIZES = [
+      { text:'Free Drink', icon:'🥤', win:true },
+      { text:'10% Off Your Order', icon:'🎟️', win:true },
+      { text:'Free Dessert', icon:'🍰', win:true },
+    ];
+    const LOSE = [
+      { text:'Better luck next time!', icon:'😅', win:false },
+      { text:'So close! Try again!', icon:'🤞', win:false },
+    ];
+
+    const grid = document.getElementById('cardsGrid');
+    const msg = document.getElementById('gameMsg');
+    const replayBtn = document.getElementById('replayBtn');
+    let picked = false;
+
+    function shuffle(arr){
+      const a = arr.slice();
+      for(let i = a.length - 1; i > 0; i--){
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    function buildRound(){
+      picked = false;
+      msg.textContent = '';
+      replayBtn.style.display = 'none';
+      grid.innerHTML = '';
+
+      // Build pool: 3 winners + 2 losers, shuffled
+      const pool = shuffle([...PRIZES, ...LOSE]);
+
+      for(let i = 0; i < 5; i++){
+        const card = document.createElement('div');
+        card.className = 'flip-card';
+        card.innerHTML = `
+          <div class="flip-inner">
+            <div class="flip-front">?</div>
+            <div class="flip-back"><span class="prize-icon"></span><span class="prize-text"></span></div>
+          </div>`;
+        // No prize data in DOM — assigned on click
+        card.addEventListener('click', function(){
+          if(picked) return;
+          picked = true;
+          // Assign prize NOW on click via crypto random
+          const freshPool = shuffle([...PRIZES, ...LOSE]);
+          // Use crypto for extra randomness to pick index
+          const bytes = new Uint32Array(1);
+          crypto.getRandomValues(bytes);
+          const chosenIdx = bytes[0] % freshPool.length;
+          const result = freshPool[chosenIdx];
+
+          // Reveal chosen card
+          const back = card.querySelector('.flip-back');
+          card.querySelector('.prize-icon').textContent = result.icon;
+          card.querySelector('.prize-text').textContent = result.text;
+          if(!result.win) back.classList.add('loser');
+          card.classList.add('revealed');
+
+          // Assign and reveal remaining cards after delay
+          const remaining = freshPool.filter((_,idx) => idx !== chosenIdx);
+          const shuffledRemaining = shuffle(remaining);
+          const otherCards = Array.from(grid.children).filter(c => c !== card);
+
+          setTimeout(() => {
+            otherCards.forEach((c, idx) => {
+              const r = shuffledRemaining[idx];
+              const b = c.querySelector('.flip-back');
+              c.querySelector('.prize-icon').textContent = r.icon;
+              c.querySelector('.prize-text').textContent = r.text;
+              if(!r.win) b.classList.add('loser');
+              c.classList.add('revealed','dimmed');
+            });
+            msg.textContent = result.win ? '🎉 Congratulations! ' + result.text + '!' : result.text;
+            replayBtn.style.display = 'inline-block';
+          }, 800);
+        });
+        grid.appendChild(card);
+      }
+    }
+
+    replayBtn.addEventListener('click', buildRound);
+
+    // Hamburger menu toggle
+    document.querySelector('.menu-toggle')?.addEventListener('click', function(){
+      const nav = document.getElementById(this.dataset.menuTarget);
+      if(nav) nav.classList.toggle('open');
+    });
+
+    buildRound();
+  })();
+  </script>
+</body>
+</html>

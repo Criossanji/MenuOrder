@@ -18,6 +18,7 @@
             <a href="about.html">About Us</a>
             <a href="certifications.html">Certifications</a>
             <a href="location.html">Location</a>
+            <!-- <a href="game.html">Lucky Pick</a> -->
             <a href="https://wa.me/96170673328" target="_blank" rel="noopener">WhatsApp</a>
             <a href="https://www.instagram.com/croissanji/" target="_blank" rel="noopener">Instagram</a>
             <a href="https://www.facebook.com/profile.php?id=100094430829983" target="_blank" rel="noopener">Facebook</a>
@@ -84,6 +85,25 @@
     </footer>
     <button class="back-to-top" aria-label="Back to top">&#8593;</button>
     <script src="ui.js"></script>
+    <script>
+      (function () {
+        var track = document.querySelector('.gallery-track');
+        var imgs = track.querySelectorAll('img');
+        var total = imgs.length, loaded = 0;
+        function onLoad() {
+          loaded++;
+          if (loaded >= total) track.classList.add('gallery-ready');
+        }
+        imgs.forEach(function (img) {
+          if (img.complete) { onLoad(); }
+          else { img.addEventListener('load', onLoad); img.addEventListener('error', onLoad); }
+        });
+        // hover pause
+        var overflow = document.querySelector('.gallery-overflow');
+        overflow.addEventListener('mouseenter', function () { track.style.animationPlayState = 'paused'; });
+        overflow.addEventListener('mouseleave', function () { track.style.animationPlayState = ''; });
+      })();
+    </script>
 </body>
 </html>
 
