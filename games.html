@@ -801,19 +801,62 @@ function roundRect(ctx,x,y,w,h,r){
 /* ═══════════ 5. GUESS THE FILLING ═══════════ */
 (function(){
   var ITEMS = [
-    {name:"Philadelphia", hints:["I live in the Dinner Beef section.","Mushrooms and onions hide inside me.","Mozzarella melts over my beef.","I'm named after an American city."]},
-    {name:"Pepito", hints:["I'm poultry, not beef.","There are chips inside the croissant, not beside it.","Guasacaca sauce is my Venezuelan secret.","My name sounds like a little Spanish nickname."]},
-    {name:"Zaatar Croissant", hints:["I'm a breakfast classic.","Olive oil keeps me glossy.","My filling is a green herb mix.","My name starts with Z."]},
-    {name:"Nutella Mini Bites", hints:["I'm on the sweet side of the menu.","I come in small pieces, not one sandwich.","Hazelnut and chocolate, that's all I need.","Kids order me by name — it starts with N."]},
-    {name:"Almond Croissant", hints:["No meat, no cheese, no problem.","I'm crunchy on top.","A nut gives me my name.","I'm the very first item on the menu."]},
-    {name:"Cheesy Spicy Beef", hints:["I bring the heat.","Two cheeses team up inside me.","Beef is my base.","My name tells you exactly what I am — three words."]},
-    {name:"Extra Sauce Burger", hints:["I'm in the Burgers section.","Mustard, ketchup and BBQ all show up.","Pickles and mushroom sneak in too.","My name promises more of something drippy."]}
+    {name:"Almond Croissant", hints:["My crunch is on the roof, not inside.","I contain no chocolate — don't let the decoys fool you.","I'm the plainest member of the nutty family.","Sliced nuts are baked onto my top."]},
+    {name:"Cheese Croissant", hints:["I'm warm, simple, and stretchy inside.","No meat, no herbs, no olives — just one filling.","I'm a kids' favorite savory breakfast.","Melted dairy is my only secret."]},
+    {name:"Zaatar Croissant", hints:["I taste like a Lebanese morning.","Olive oil keeps my filling glossy.","My green mix includes sesame seeds.","Some call my herb 'thyme' in English."]},
+    {name:"Cheese and Olive Croissant", hints:["I'm salty twice over.","One of my two fillings grows on a tree.","My partner filling melts; I don't.","A briny pitted fruit meets melted dairy inside me."]},
+    {name:"Cheese & Mortadella Croissant", hints:["Half of me is a famous Italian cold cut.","I'm a deli classic wrapped in flaky dough.","My meat slice is round and pink.","Bologna, Italy is proud of my meat."]},
+    {name:"Pizza Croissant", hints:["I'm an Italian classic in disguise.","Tomato and cheese, but I'm not a sandwich.","Fold a famous dish into flaky dough and you get me.","You'd normally order my namesake by the slice."]},
+    {name:"Chocolate Croissant", hints:["I'm sweet and I melt if you wait too long.","No nuts on top — that's my brother.","The French have a special name for my kind.","One rich dark filling, nothing else."]},
+    {name:"Almond & Chocolate Croissant", hints:["I'm two desserts in one.","Crunchy above, melty below.","My two stars are a nut and a sweet.","I'm the deluxe combination of two other croissants."]},
+    {name:"Lite Croissant Shofan", hints:["I'm the healthy rebel of the bakery.","My dough isn't the usual buttery one.","My grain is a breakfast-cereal favorite.","My Arabic name means oats."]},
+    {name:"Lite Cheese Croissant", hints:["I live on the diet side of the menu.","My cheese is white and squeaky, not melty yellow.","I'm lighter than my melted-cheese cousin.","Haloum inside a lite croissant — that's me."]},
+    {name:"Lite Thyme Croissant", hints:["Light dough, bold herb.","I'm the diet twin of a breakfast classic.","My filling is green and fragrant.","Same herb as the zaatar one, but I'm the lite version."]},
+    {name:"Turkey and Cheese Sandwich", hints:["Corn kernels hide inside me.","My meat is a bird, served cold-cut style.","Pickles and lettuce keep me fresh.","A poultry slice plus dairy — my name says both."]},
+    {name:"Grilled Halloumi Sandwich", hints:["My star ingredient squeaks when you bite it.","I visit the grill before I meet the croissant.","Cucumber and tomato are my sidekicks.","My cheese is Cypriot and holds its shape over fire."]},
+    {name:"Labneh Sandwich", hints:["I'm the freshest thing here — nothing about me is cooked.","Oregano is sprinkled over my creamy base.","Olives and cucumber join my white star.","My filling is strained yogurt."]},
+    {name:"Omelette Sandwich", hints:["I start in a frying pan, not an oven.","Turkey sneaks in beside my main star.","My core ingredient comes out of a shell.","Beaten eggs, cooked and folded."]},
+    {name:"Cheesy Tawook", hints:["Garlic is my loudest ingredient.","Corn and iceberg cool down my extra dairy.","My name is half Arabic, half English.","Marinated skewer-style chicken with extra cheese."]},
+    {name:"Fajita", hints:["I sound Mexican but I live in a croissant.","Avocado sauce is my creamy secret.","Peppers, onions and mushrooms fill me — but no heat.","I'm the calm twin; my sibling brings the fire."]},
+    {name:"Spicy Fajita", hints:["I'm somebody's fiery twin.","Avocado sauce meets hot sauce inside me.","Peppers and onions, but with a burn.","Everything the calm version has, plus one extra sauce."]},
+    {name:"Chicken BBQ", hints:["Chips are inside me, not on the side.","My sauce is smoky and sweet.","Poultry, pickles and a grill-flavored glaze.","My name is simply the meat plus the sauce."]},
+    {name:"Chicken Sub", hints:["Soy sauce is my unexpected twist.","Corn and mozzarella join my poultry.","My name borrows from a submarine-shaped sandwich.","I'm the chicken melt with an Asian touch."]},
+    {name:"Pepito", hints:["A Venezuelan sauce hides inside me.","Chips crunch between my layers.","Mustard, ketchup, mayo AND BBQ — I hold four sauces.","My name is a Spanish nickname for a little Pepe."]},
+    {name:"Boneless BBQ", hints:["My name tells you what I DON'T have.","Cheddar and chips ride along with me.","Smoky sauce coats my tender chicken pieces.","No skeleton jokes, please."]},
+    {name:"Philadelphia", hints:["I'm named after a city I've never visited.","Thin beef is my heart.","Mushrooms, peppers and onions pile onto me.","Americans call my style a 'cheesesteak'."]},
+    {name:"Cheesy Spicy Beef", hints:["Two cheeses gang up inside me.","I bring beef AND a burn.","Mozzarella and cheddar blanket my hot mix.","My three-word name is exactly what I am."]},
+    {name:"Extra Sauce Burger", hints:["I'm the messiest thing on the menu.","Mustard, ketchup and BBQ all show up.","Mushrooms and pickles hide under my drips.","My name promises more of something you'll need napkins for."]},
+    {name:"Croissanji Burger", hints:["I carry the restaurant's own name.","Two patties, not one.","Onion rings AND caramelized onions — double onion.","I'm the signature double-decker."]},
+    {name:"Brisket Burger", hints:["My beef is pulled, not ground.","I cook for hours before you ever see me.","Honey sweetens my BBQ sauce.","150 grams of slow-cooked shredded beef."]},
+    {name:"Truffle Burger", hints:["My sauce is named after something dogs dig up.","Arugula adds a peppery bite to me.","Dijon and Emmental support my luxury star.","I'm the fanciest patty on the board."]},
+    {name:"Blue Cheese Burger", hints:["My sauce divides people — love it or hate it.","My star cheese has veins.","Dijon mustard backs up my bold dairy.","A deliberately moldy cheese crowns my patty."]},
+    {name:"Mushroom Swiss Burger", hints:["A creamy fungus sauce covers my patty.","My cheese style sounds like a country.","Emmental melts over me.","Fungi sauce plus that holey Alpine cheese."]},
+    {name:"Crispy Meal", hints:["I come with five golden soldiers.","Three dips guard my box.","Fries ride shotgun with my strips.","Cheddar, BBQ and garlic all dip with me."]},
+    {name:"Crispy Kids Meal", hints:["I'm the little sibling of a bigger box.","Only three golden strips in here.","Ketchup and garlic, sized for small hands.","Pickles sneak into my kid-sized box."]},
+    {name:"Protein Rush", hints:["I'm measured in grams, not vibes.","Mashed potatoes and vegetables fill my plate.","240 grams of grilled poultry lead me.","Gym people order me by name."]},
+    {name:"Chicken Caesar Salad", hints:["An emperor lends me his name.","Croutons crunch through my greens.","Parmesan shavings crown my bowl.","My dressing shares a name with a Roman ruler."]},
+    {name:"Fries Box", hints:["I'm the simplest golden classic.","No spirals, no toppings — just crunch.","I come straight-cut in a box.","Every menu on earth has me; mine's just crispier."]},
+    {name:"Curly Fries Box", hints:["Same potato, different haircut.","My shape is a spiral.","No cheese on me — that's my loaded cousin.","Twisted, seasoned and boxed."]},
+    {name:"Mozzarella Sticks(4 pcs)", hints:["Pull me apart slowly for the best photo.","I come in exactly four pieces.","Golden outside, stretchy white inside.","I'm a set of breaded dairy batons."]},
+    {name:"Onion Rings Box", hints:["I'm a vegetable wearing a crispy coat.","My shape is a circle with a hole.","I only make you cry before I'm cooked.","Battered hoops in a box."]},
+    {name:"Loaded Fries", hints:["I'm fries that went to a party.","Bacon and cheese crashed my box.","Straight-cut base, heavy toppings.","My first name literally describes my situation."]},
+    {name:"Curly Loaded Fries", hints:["Spiral base, heavy blanket.","I'm the twisted version of a topped classic.","Cheese melts into my curls.","Two upgrades in one box: the shape and the toppings."]},
+    {name:"Guacamole Dip", hints:["I'm green and I'm proud.","My star fruit hides a giant seed.","Mexico gave me my name.","I'm mashed avocado, ready for dipping."]},
+    {name:"Pesto Dip", hints:["I'm green, but I'm not avocado.","An Italian herb paste is my base.","Basil is my soul.","Genoa would be proud of me."]},
+    {name:"Ayran", hints:["I'm a drink with ancient roots.","Salty, not sweet — that surprises people.","Yogurt, water and salt: that's all of me.","Turkey and Lebanon both claim me."]},
+    {name:"Iced Tea", hints:["I'm a hot classic gone cold.","Leaves were brewed to make me.","I'm sweet, chilled and refreshing.","My name is literally my temperature plus my drink."]},
+    {name:"LOTUS CROISSANT", hints:["My filling is a famous caramelized biscuit spread.","I live on the dessert side.","My name is also a flower.","Biscoff fans order me on sight."]},
+    {name:"OREO DONUTS", hints:["A black-and-white cookie crumbled over a ring.","Twist, lick, dunk — my topping's famous ritual.","I'm a ring-shaped sweet with cookie pieces.","My topping is the world's best-selling cookie."]},
+    {name:"ECLAIR", hints:["I'm French and filled with cream.","My name means 'lightning' in my home language.","I'm long, not round.","Choux pastry with chocolate on top."]},
+    {name:"Nutella Mini Bites", hints:["I'm tiny, sweet, and dangerous by the dozen.","Hazelnut and chocolate fill my little pieces.","Kids order me by my famous jar name.","Small bites, big chocolate-hazelnut energy."]},
+    {name:"Cheesy Tawook Mini Bites", hints:["I'm a garlicky classic, shrunk down.","Marinated chicken and cheese in tiny form.","My big brother has extra cheese and corn.","I'm the bite-sized version of a half-Arabic-named sandwich."]},
+    {name:"Pepito Mini Bites", hints:["I'm a little version of an already little name.","Turkey and chips, in miniature.","My full-size twin holds four sauces.","Venezuelan-inspired and bite-sized."]}
   ];
   var hintsBox=document.getElementById("guess-hints"), choicesBox=document.getElementById("guess-choices"),
       btnStart=document.getElementById("guess-start"), btnHint=document.getElementById("guess-hint"),
       elRound=document.getElementById("guess-round"), elScore=document.getElementById("guess-score"),
       elTime=document.getElementById("guess-time");
-  var round=0, score=0, target=null, shown=0, locked=false, roundLeft=0, timer=null;
+  var round=0, score=0, target=null, shown=0, locked=false, roundLeft=0, timer=null, gamePool=[];
 
   function pick(arr,n,excl){
     var pool = arr.filter(function(a){return a!==excl});
@@ -849,7 +892,7 @@ function roundRect(ctx,x,y,w,h,r){
   function newRound(){
     round++; locked=false;
     elRound.textContent = round+" / 5";
-    target = ITEMS[Math.floor(Math.random()*ITEMS.length)];
+    target = gamePool[round-1];
     shown = 1;
     renderHints();
     btnHint.style.display = "";
@@ -898,6 +941,7 @@ function roundRect(ctx,x,y,w,h,r){
   btnStart.addEventListener("click", function(){
     if(!requireName()) return;
     round=0; score=0; elScore.textContent="0";
+    gamePool = ITEMS.slice().sort(function(){return Math.random()-0.5}).slice(0,5);
     btnStart.style.display="none";
     newRound();
   });
