@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Croissanji — Ideas Lab</title>
 <style>
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap");
@@ -42,7 +42,7 @@ p.zone-sub{font-size:13px;opacity:.85;margin-bottom:12px}
 .game-panel h3{font-size:17px;margin-bottom:2px}
 .game-panel .how{font-size:12.5px;color:var(--deepgreen);margin-bottom:10px}
 .game-stage{display:flex;flex-direction:column;align-items:center;gap:10px}
-canvas.game-canvas{width:100%;max-width:380px;border-radius:12px;border:2px solid var(--darkred);background:#fdf3ee;touch-action:manipulation;cursor:pointer;display:block}
+canvas.game-canvas{width:100%;max-width:380px;border-radius:12px;border:2px solid var(--darkred);background:#fdf3ee;touch-action:none;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent;cursor:pointer;display:block}
 .game-hud{display:flex;gap:14px;font-weight:700;font-size:14px;flex-wrap:wrap}
 .game-hud span b{color:var(--deepgreen)}
 button.btn-game{background:var(--deepgreen);color:var(--cream);border:none;border-radius:10px;padding:10px 18px;font-weight:700;font-size:14px;cursor:pointer;font-family:Poppins,sans-serif}
@@ -283,6 +283,13 @@ document.getElementById("gameTabs").addEventListener("click", function(e){
   activeGame = id;
   document.querySelectorAll("#gameTabs button").forEach(function(b){ b.classList.toggle("active", b===btn); });
   document.querySelectorAll(".game-panel").forEach(function(p){ p.classList.toggle("active", p.id === "panel-"+id); });
+});
+
+/* stop mobile double-tap zoom + page scrolling while touching a game canvas */
+document.querySelectorAll("canvas.game-canvas").forEach(function(cv){
+  ["touchstart","touchmove","touchend"].forEach(function(ev){
+    cv.addEventListener(ev, function(e){ e.preventDefault(); }, {passive:false});
+  });
 });
 
 function bestKey(g){ return "croissanji-best-"+g; }
@@ -745,6 +752,7 @@ function roundRect(ctx,x,y,w,h,r){
   }
   cv.addEventListener("pointerdown", function(e){
     e.preventDefault();
+    try{ cv.setPointerCapture(e.pointerId); }catch(_){}
     if(state==="idle"){ reset(); state="play"; }
     else if(state==="over" && Date.now()-overAt>500){ reset(); state="play"; }
     movePointer(e);
