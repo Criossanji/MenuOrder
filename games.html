@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Games - Croissanji</title>
+<link rel="stylesheet" href="styles.css">
+<style>
+/* ── Games page ── */
+.games-wrap{max-width:760px;margin:0 auto;padding:12px}
+.player-bar{display:flex;align-items:center;gap:8px;background:var(--c-cream);color:var(--c-darkred);border:1px solid var(--c-darkred);border-radius:999px;padding:8px 14px;margin-bottom:12px;font-size:13.5px;flex-wrap:wrap}
+.player-bar b{color:var(--c-deepgreen)}
+.player-bar button{margin-left:auto;background:var(--c-deepgreen);color:var(--c-cream);border:none;border-radius:999px;padding:6px 12px;font-weight:700;font-size:12px;cursor:pointer;font-family:Poppins,sans-serif}
+.name-form{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+.name-form input{border:1px solid var(--c-darkred);background:#fff;color:var(--c-darkred);border-radius:10px;padding:10px 12px;font-size:15px;font-family:Poppins,sans-serif}
+.btn-primary{background:var(--c-deepgreen);color:var(--c-cream);border:none;border-radius:10px;padding:12px;font-weight:700;cursor:pointer;font-size:14px;font-family:Poppins,sans-serif}
+
+.game-tabs{display:flex;gap:6px;overflow-x:auto;padding:4px 0 10px;scrollbar-width:none}
+.game-tabs::-webkit-scrollbar{display:none}
+.game-tabs button{flex-shrink:0;background:var(--c-cream);color:var(--c-darkred);border:1px solid var(--c-darkred);padding:8px 13px;border-radius:10px;font-weight:700;font-size:13px;cursor:pointer;font-family:Poppins,sans-serif;white-space:nowrap}
+.game-tabs button.active{background:var(--c-deepgreen);color:var(--c-cream);border-color:var(--c-cream)}
+
+.game-panel{display:none;background:var(--c-cream);color:var(--c-darkred);border-radius:14px;border:1px solid var(--c-darkred);padding:14px;margin-bottom:16px}
+.game-panel.active{display:block}
+.game-panel h3{font-size:17px;margin-bottom:2px}
+.game-panel .how{font-size:12.5px;color:var(--c-deepgreen);margin-bottom:10px}
+.game-stage{display:flex;flex-direction:column;align-items:center;gap:10px}
+canvas.game-canvas{width:100%;max-width:380px;border-radius:12px;border:2px solid var(--c-darkred);background:#fdf3ee;touch-action:manipulation;cursor:pointer;display:block}
+.game-hud{display:flex;gap:14px;font-weight:700;font-size:14px;flex-wrap:wrap;justify-content:center}
+.game-hud span b{color:var(--c-deepgreen)}
+button.btn-game{background:var(--c-deepgreen);color:var(--c-cream);border:none;border-radius:10px;padding:10px 18px;font-weight:700;font-size:14px;cursor:pointer;font-family:Poppins,sans-serif}
+
+.leaderboard{width:100%;max-width:380px;background:#fff;border:2px solid var(--c-darkred);border-radius:12px;padding:10px 12px}
+.leaderboard h4{font-size:13px;margin:0 0 6px;color:var(--c-darkred)}
+.leaderboard ol{list-style:none;display:flex;flex-direction:column;gap:4px}
+.leaderboard li{display:flex;justify-content:space-between;font-size:13px;gap:8px}
+.leaderboard li .lb-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:70%}
+.leaderboard li b{color:var(--c-deepgreen)}
+.leaderboard .lb-empty{font-size:12.5px;color:var(--c-deepgreen);opacity:.8}
+
+.ticket{background:#fff;border:2px dashed var(--c-darkred);border-radius:10px;padding:10px 12px;width:100%;max-width:380px;font-size:14px}
+.ticket b{font-size:15px}
+.ticket .otimer{font-weight:800;color:#b3541e}
+.ticket.good{background:#dff0df;border-color:var(--c-deepgreen)}
+.ticket.bad{animation:shake .4s}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}50%{transform:translateX(6px)}75%{transform:translateX(-4px)}}
+.food-tray{width:100%;max-width:380px;min-height:46px;background:#fff;border:2px solid #e8b04b;border-radius:999px;display:flex;align-items:center;justify-content:center;gap:4px;font-size:20px;padding:6px 14px;flex-wrap:wrap}
+.ing-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;width:100%;max-width:380px}
+.ing-grid button{background:#fff;border:1.5px solid var(--c-darkred);border-radius:10px;padding:7px 2px;font-size:12px;font-weight:600;cursor:pointer;font-family:Poppins,sans-serif;color:var(--c-darkred);line-height:1.3}
+.ing-grid button .em{font-size:18px;display:block}
+.ing-grid button.sel{background:var(--c-deepgreen);color:var(--c-cream);border-color:var(--c-deepgreen)}
+.rush-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:center}
+
+.hints{width:100%;max-width:380px;display:flex;flex-direction:column;gap:6px}
+.hints div{background:#fff;border-left:4px solid #e8b04b;border-radius:8px;padding:8px 10px;font-size:13.5px}
+.choices{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%;max-width:380px}
+.choices button{background:#fff;border:1.5px solid var(--c-darkred);border-radius:10px;padding:10px 6px;font-weight:700;font-size:13px;cursor:pointer;font-family:Poppins,sans-serif;color:var(--c-darkred)}
+.choices button:disabled{opacity:.35;cursor:default;text-decoration:line-through}
+.choices button.right{background:var(--c-deepgreen);color:var(--c-cream);border-color:var(--c-deepgreen)}
+</style>
+</head>
+<body>
+  <div id="nameModal" class="modal-backdrop hidden">
+    <div class="modal-card">
+      <h2>Who's playing? 🥐</h2>
+      <p>Enter your name so your best scores make it onto the Top Bakers board.</p>
+      <div class="name-form">
+        <input id="playerNameInput" type="text" maxlength="20" placeholder="Your name">
+        <button id="playerNameSave" class="btn-primary">Let's play!</button>
+      </div>
+    </div>
+  </div>
+
+  <header>
+    <div class="header-content">
+      <img src="images/logocroissanji.png" alt="Croissanji Logo" class="logo">
+      <button class="menu-toggle" data-menu-target="siteMenu" aria-label="Open menu">☰</button>
+    </div>
+    <p class="page-tag">Games</p>
+    <nav class="top-links" id="siteMenu">
+      <a href="index.html">Menu Categories</a>
+      <a href="code.html">Full Menu</a>
+      <a href="about.html">About Us</a>
+      <a href="certifications.html">Certifications</a>
+      <a href="location.html">Location</a>
+      <a href="https://wa.me/96170673328" target="_blank" rel="noopener">WhatsApp</a>
+      <a href="https://www.instagram.com/croissanji/" target="_blank" rel="noopener">Instagram</a>
+      <a href="https://www.facebook.com/profile.php?id=100094430829983" target="_blank" rel="noopener">Facebook</a>
+    </nav>
+  </header>
+
+  <main class="games-wrap">
+    <div class="player-bar">
+      🧑‍🍳 Playing as: <b id="playerNameLabel">—</b>
+      <button id="playerNameChange">Change name</button>
+    </div>
+
+    <nav class="game-tabs" id="gameTabs">
+      <button data-game="stacker" class="active">🥐 Croissant Stacker</button>
+      <button data-game="flip">🧈 Flaky Flip</button>
+      <button data-game="rush">🧾 Order Rush</button>
+      <button data-game="catch">🧺 Croissant Catch</button>
+      <button data-game="guess">❓ Guess the Filling</button>
+    </nav>
+
+    <!-- 1. STACKER -->
+    <section class="game-panel active" id="panel-stacker">
+      <h3>Croissant Stacker</h3>
+      <p class="how">Build a croissant sandwich: dough, cheese, tomato, lettuce, beef — tap (or Space) to drop each ingredient. It slides faster every layer, and past layer 8 it changes direction without warning.</p>
+      <div class="game-stage">
+        <canvas class="game-canvas" id="cv-stacker" width="340" height="460"></canvas>
+        <div class="game-hud"><span>Layers: <b id="stacker-score">0</b></span><span>Best: <b id="stacker-best">0</b></span></div>
+        <div class="leaderboard" id="lb-stacker"></div>
+      </div>
+    </section>
+
+    <!-- 2. FLAKY FLIP -->
+    <section class="game-panel" id="panel-flip">
+      <h3>Flaky Flip</h3>
+      <p class="how">Tap (or Space) to keep the croissant flying. The rolling pins come faster and the gaps get tighter as your score climbs. Butter 🧈 = +2.</p>
+      <div class="game-stage">
+        <canvas class="game-canvas" id="cv-flip" width="340" height="460"></canvas>
+        <div class="game-hud"><span>Score: <b id="flip-score">0</b></span><span>Best: <b id="flip-best">0</b></span></div>
+        <div class="leaderboard" id="lb-flip"></div>
+      </div>
+    </section>
+
+    <!-- 3. ORDER RUSH -->
+    <section class="game-panel" id="panel-rush">
+      <h3>Order Rush</h3>
+      <p class="how">Real Croissanji orders, 60 seconds on the shift clock — each order has its own shrinking timer and the shelf reshuffles after every serve. Serve fast for a bonus.</p>
+      <div class="game-stage">
+        <div class="ticket" id="rush-ticket"><b>Press Start</b><br>Orders come from the real menu.</div>
+        <div class="food-tray" id="rush-tray">🥐 &nbsp; … &nbsp; 🥐</div>
+        <div class="ing-grid" id="rush-grid"></div>
+        <div class="rush-row">
+          <button class="btn-game" id="rush-start">Start</button>
+          <button class="btn-game" id="rush-serve" style="display:none">Serve ✅</button>
+          <div class="game-hud"><span>⏱ <b id="rush-time">60</b>s</span><span>Score: <b id="rush-score">0</b></span></div>
+        </div>
+        <div class="leaderboard" id="lb-rush"></div>
+      </div>
+    </section>
+
+    <!-- 4. CATCH -->
+    <section class="game-panel" id="panel-catch">
+      <h3>Croissant Catch</h3>
+      <p class="how">Move the basket with finger, mouse or arrow keys. 🥐 +1, 🧈 +3, 🔥 costs a life. The oven bakes faster, items drift sideways, more come out burnt. 3 lives.</p>
+      <div class="game-stage">
+        <canvas class="game-canvas" id="cv-catch" width="340" height="460"></canvas>
+        <div class="game-hud"><span>Score: <b id="catch-score">0</b></span><span>Lives: <b id="catch-lives">3</b></span><span>Best: <b id="catch-best">0</b></span></div>
+        <div class="leaderboard" id="lb-catch"></div>
+      </div>
+    </section>
+
+    <!-- 5. GUESS -->
+    <section class="game-panel" id="panel-guess">
+      <h3>Guess the Filling</h3>
+      <p class="how">A mystery menu item, revealed hint by hint — every round has a countdown that shrinks each round. Guess early for more points. 5 rounds.</p>
+      <div class="game-stage">
+        <div class="hints" id="guess-hints"><div>Press Start to open the first mystery croissant.</div></div>
+        <div class="choices" id="guess-choices"></div>
+        <div class="rush-row">
+          <button class="btn-game" id="guess-start">Start</button>
+          <button class="btn-game" id="guess-hint" style="display:none">Extra hint 🔍</button>
+          <div class="game-hud"><span>Round: <b id="guess-round">–</b></span><span>⏱ <b id="guess-time">–</b>s</span><span>Score: <b id="guess-score">0</b></span></div>
+        </div>
+        <div class="leaderboard" id="lb-guess"></div>
+      </div>
+    </section>
+  </main>
+
+  <button class="back-to-top" aria-label="Back to top">&#8593;</button>
+  <script src="ui.js"></script>
+<script>
+(function(){
+"use strict";
+
+/* ═══════════ Player name + leaderboards ═══════════ */
+var NAME_KEY = "croissanji_player_name";
+var nameModal = document.getElementById("nameModal"),
+    nameInput = document.getElementById("playerNameInput"),
+    nameSave = document.getElementById("playerNameSave"),
+    nameLabel = document.getElementById("playerNameLabel"),
+    nameChange = document.getElementById("playerNameChange");
+
+function playerName(){ return (localStorage.getItem(NAME_KEY)||"").trim(); }
+function openNameModal(){
+  nameInput.value = playerName();
+  nameModal.classList.remove("hidden");
+  setTimeout(function(){ nameInput.focus(); }, 50);
+}
+function saveName(){
+  var v = (nameInput.value||"").trim();
+  if(!v){ nameInput.focus(); nameInput.placeholder = "Please type a name first 🙂"; return; }
+  localStorage.setItem(NAME_KEY, v.slice(0,20));
+  nameLabel.textContent = playerName();
+  nameModal.classList.add("hidden");
+}
+nameSave.addEventListener("click", saveName);
+nameInput.addEventListener("keydown", function(e){ if(e.key==="Enter") saveName(); });
+nameChange.addEventListener("click", openNameModal);
+if(playerName()){ nameLabel.textContent = playerName(); } else { openNameModal(); }
+
+/* every game calls this before starting */
+function requireName(){
+  if(playerName()) return true;
+  openNameModal();
+  return false;
+}
+
+var LB_LABELS = {stacker:"layers", flip:"points", rush:"points", catch:"points", guess:"/ 20"};
+function lbKey(g){ return "croissanji_lb_"+g; }
+function loadLB(g){
+  try{ var a = JSON.parse(localStorage.getItem(lbKey(g))||"[]"); return Array.isArray(a)?a:[]; }
+  catch(_){ return []; }
+}
+function submitScore(g, score){
+  if(!score || score<=0) return;
+  var name = playerName() || "Guest";
+  var arr = loadLB(g);
+  var found = null;
+  arr.forEach(function(e){ if(e.name.toLowerCase()===name.toLowerCase()) found = e; });
+  if(found){ if(score>found.score) found.score = score; }
+  else { arr.push({name:name, score:score}); }
+  arr.sort(function(a,b){ return b.score-a.score; });
+  arr = arr.slice(0,3);
+  localStorage.setItem(lbKey(g), JSON.stringify(arr));
+  renderLB(g);
+}
+var MEDALS = ["🥇","🥈","🥉"];
+function renderLB(g){
+  var box = document.getElementById("lb-"+g);
+  if(!box) return;
+  var arr = loadLB(g);
+  var html = "<h4>🏆 Top Bakers</h4>";
+  if(!arr.length){
+    html += '<div class="lb-empty">No scores yet — be the first on the board!</div>';
+  } else {
+    html += "<ol>" + arr.map(function(e,i){
+      return '<li><span class="lb-name">'+MEDALS[i]+" "+escapeHtml(e.name)+'</span><b>'+e.score+" "+LB_LABELS[g]+"</b></li>";
+    }).join("") + "</ol>";
+  }
+  box.innerHTML = html;
+}
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, function(c){
+    return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];
+  });
+}
+["stacker","flip","rush","catch","guess"].forEach(renderLB);
+
+/* ═══════════ Tabs ═══════════ */
+var activeGame = "stacker";
+var stops = {};
+document.getElementById("gameTabs").addEventListener("click", function(e){
+  var btn = e.target.closest("button[data-game]");
+  if(!btn) return;
+  var id = btn.dataset.game;
+  if(id === activeGame) return;
+  if(stops[activeGame]) stops[activeGame]();
+  activeGame = id;
+  document.querySelectorAll("#gameTabs button").forEach(function(b){ b.classList.toggle("active", b===btn); });
+  document.querySelectorAll(".game-panel").forEach(function(p){ p.classList.toggle("active", p.id === "panel-"+id); });
+});
+
+function bestKey(g){ return "croissanji-best-"+g; }
+function getBest(g){ return parseInt(localStorage.getItem(bestKey(g))||"0",10); }
+function setBest(g,v){ if(v>getBest(g)){ localStorage.setItem(bestKey(g), String(v)); } }
+
+function roundRect(ctx,x,y,w,h,r){
+  if(w<2*r) r=w/2; if(h<2*r) r=h/2;
+  ctx.beginPath();
+  ctx.moveTo(x+r,y);
+  ctx.arcTo(x+w,y,x+w,y+h,r);
+  ctx.arcTo(x+w,y+h,x,y+h,r);
+  ctx.arcTo(x,y+h,x,y,r);
+  ctx.arcTo(x,y,x+w,y,r);
+  ctx.closePath();
+}
+
+/* ═══════════ 1. CROISSANT STACKER ═══════════ */
+(function(){
+  var cv = document.getElementById("cv-stacker"), ctx = cv.getContext("2d");
+  var W = cv.width, H = cv.height, LH = 26;
+  var state = "idle", stack, cur, dir, speed, overAt = 0;
+  var elScore = document.getElementById("stacker-score"), elBest = document.getElementById("stacker-best");
+  elBest.textContent = getBest("stacker");
+
+  function drawDough(x,y,w){
+    var g = ctx.createLinearGradient(0,y,0,y+LH);
+    g.addColorStop(0,"#f2c169"); g.addColorStop(1,"#c98a2e");
+    ctx.fillStyle = g;
+    roundRect(ctx,x,y,w,LH-3,11); ctx.fill();
+    ctx.strokeStyle="#a86c1d"; ctx.lineWidth=1.5; ctx.stroke();
+    ctx.strokeStyle="rgba(150,95,25,.6)"; ctx.lineWidth=2;
+    var n = Math.max(2, Math.floor(w/30));
+    for(var k=1;k<=n;k++){
+      var rx = x + (w/(n+1))*k;
+      ctx.beginPath();
+      ctx.moveTo(rx-7, y+LH-7);
+      ctx.quadraticCurveTo(rx+1, y+LH/2-6, rx+8, y+3);
+      ctx.stroke();
+    }
+    ctx.fillStyle="rgba(255,248,230,.4)";
+    roundRect(ctx, x+5, y+3, Math.max(8,w-10), 4, 2); ctx.fill();
+  }
+  function drawCheese(x,y,w){
+    ctx.fillStyle="#f4c430";
+    roundRect(ctx,x,y+1,w,LH-9,4); ctx.fill();
+    ctx.strokeStyle="#c79412"; ctx.lineWidth=1.2;
+    roundRect(ctx,x,y+1,w,LH-9,4); ctx.stroke();
+    var n = Math.max(2, Math.floor(w/38));
+    ctx.fillStyle="#f4c430";
+    for(var k=0;k<n;k++){
+      var t = n>1 ? k/(n-1) : 0.5;
+      var dx = x + 8 + (w-24)*t;
+      roundRect(ctx, dx, y+LH-12, 9, 10, 4.5); ctx.fill();
+    }
+  }
+  function drawTomato(x,y,w){
+    ctx.fillStyle="#d0493c";
+    roundRect(ctx,x,y+2,w,LH-7,9); ctx.fill();
+    ctx.strokeStyle="#a33328"; ctx.lineWidth=1.2;
+    roundRect(ctx,x,y+2,w,LH-7,9); ctx.stroke();
+    var n = Math.max(1, Math.floor(w/50));
+    ctx.fillStyle="#e2705f";
+    for(var k=0;k<n;k++){
+      var t = n>1 ? k/(n-1) : 0.5;
+      var cx = x + 24 + (w-48)*t;
+      ctx.beginPath();
+      ctx.ellipse(cx, y+LH/2-1, 13, 5.5, 0, 0, Math.PI*2);
+      ctx.fill();
+    }
+  }
+  function drawLettuce(x,y,w){
+    var bumps = Math.max(3, Math.round(w/22));
+    ctx.fillStyle="#7fae6e";
+    ctx.beginPath();
+    ctx.moveTo(x, y+9);
+    for(var k=0;k<bumps;k++){
+      var x1 = x+(w/bumps)*k, x2 = x+(w/bumps)*(k+1);
+      ctx.quadraticCurveTo((x1+x2)/2, y-3, x2, y+9);
+    }
+    ctx.lineTo(x+w, y+LH-6);
+    for(k=bumps;k>0;k--){
+      x1 = x+(w/bumps)*k; x2 = x+(w/bumps)*(k-1);
+      ctx.quadraticCurveTo((x1+x2)/2, y+LH+2, x2, y+LH-6);
+    }
+    ctx.closePath();
+    ctx.fill();
+    ctx.strokeStyle="#5d8b4f"; ctx.lineWidth=1.3; ctx.stroke();
+  }
+  function drawPatty(x,y,w){
+    ctx.fillStyle="#7a4a21";
+    roundRect(ctx,x,y+1,w,LH-6,10); ctx.fill();
+    ctx.strokeStyle="#54300f"; ctx.lineWidth=1.3;
+    roundRect(ctx,x,y+1,w,LH-6,10); ctx.stroke();
+    ctx.fillStyle="rgba(60,33,12,.55)";
+    for(var k=0;k<Math.floor(w/12);k++){
+      var dx = x+6+((k*23)%(Math.max(10,w-12)));
+      var dy = y+6+((k*11)%(LH-14));
+      ctx.beginPath(); ctx.arc(dx,dy,1.8,0,Math.PI*2); ctx.fill();
+    }
+  }
+  var PAINTERS = [drawDough, drawCheese, drawTomato, drawLettuce, drawPatty];
+  function drawLayer(x,y,w,type){ PAINTERS[type](x,y,w); }
+
+  function reset(){
+    stack = [{x:(W-180)/2, w:180, t:0}];
+    newLayer();
+    elScore.textContent = "0";
+  }
+  function newLayer(){
+    var i = stack.length;
+    cur = {x:0, w:stack[i-1].w, t:i%PAINTERS.length};
+    dir = 1;
+    speed = 2.2 + Math.min(6.5, i*0.28);
+  }
+  function cameraY(){ return Math.max(0, stack.length*LH - 300); }
+  function layerY(i){ return H - 40 - (i+1)*LH + cameraY(); }
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle = "#fdf3ee"; ctx.fillRect(0,0,W,H);
+    ctx.fillStyle = "#680411"; ctx.fillRect(0, H-40+cameraY(), W, 340);
+    for(var i=0;i<stack.length;i++){
+      drawLayer(stack[i].x, layerY(i), stack[i].w, stack[i].t);
+    }
+    if(state==="play"){
+      drawLayer(cur.x, layerY(stack.length), cur.w, cur.t);
+    }
+    ctx.fillStyle = "#680411";
+    ctx.textAlign = "center";
+    if(state==="idle"){
+      ctx.font = "48px serif"; ctx.fillText("🥐", W/2, H/2-40);
+      ctx.font = "700 18px Poppins,sans-serif"; ctx.fillText("Croissant Stacker", W/2, H/2);
+      ctx.font = "14px Poppins,sans-serif"; ctx.fillText("Tap to start", W/2, H/2+26);
+    } else if(state==="over"){
+      ctx.fillStyle = "rgba(104,4,17,.85)"; ctx.fillRect(0,H/2-70,W,120);
+      ctx.fillStyle = "#f7e0da";
+      ctx.font = "700 20px Poppins,sans-serif"; ctx.fillText("Squashed! "+(stack.length-1)+" layers", W/2, H/2-24);
+      ctx.font = "14px Poppins,sans-serif"; ctx.fillText("Tap to rebuild", W/2, H/2+6);
+    }
+  }
+  function tick(){
+    if(state==="play"){
+      cur.x += dir*speed;
+      if(cur.x<0){cur.x=0;dir=1}
+      if(cur.x+cur.w>W){cur.x=W-cur.w;dir=-1}
+      if(stack.length>=9 && Math.random()<0.009) dir *= -1;
+    }
+    draw();
+    requestAnimationFrame(tick);
+  }
+  function drop(){
+    var prev = stack[stack.length-1];
+    var left = Math.max(prev.x, cur.x), right = Math.min(prev.x+prev.w, cur.x+cur.w);
+    var overlap = right-left;
+    if(overlap<=6){
+      state = "over"; overAt = Date.now();
+      var sc = stack.length-1;
+      setBest("stacker", sc); elBest.textContent = getBest("stacker");
+      submitScore("stacker", sc);
+      return;
+    }
+    stack.push({x:left, w:overlap, t:cur.t});
+    elScore.textContent = String(stack.length-1);
+    newLayer();
+  }
+  function action(){
+    if(state==="idle"){ if(!requireName()) return; reset(); state="play"; }
+    else if(state==="play"){ drop(); }
+    else if(state==="over" && Date.now()-overAt>500){ reset(); state="play"; }
+  }
+  cv.addEventListener("pointerdown", function(e){ e.preventDefault(); action(); });
+  document.addEventListener("keydown", function(e){
+    if(activeGame!=="stacker") return;
+    if(e.code==="Space"){ e.preventDefault(); action(); }
+  });
+  stops.stacker = function(){};
+  reset(); state="idle"; tick();
+})();
+
+/* ═══════════ 2. FLAKY FLIP ═══════════ */
+(function(){
+  var cv = document.getElementById("cv-flip"), ctx = cv.getContext("2d");
+  var W = cv.width, H = cv.height;
+  var state = "idle", y, vy, pins, butters, score, overAt = 0, nextSpawn;
+  var elScore = document.getElementById("flip-score"), elBest = document.getElementById("flip-best");
+  elBest.textContent = getBest("flip");
+
+  function pinSpeed(){ return 2.4 + Math.min(2.6, score*0.08); }
+  function gapH(){ return Math.max(112, 160 - score*3); }
+  function spawnEvery(){ return Math.max(58, 95 - score*2); }
+
+  function reset(){
+    y = H/2; vy = 0; pins = []; butters = []; score = 0; nextSpawn = 40;
+    elScore.textContent = "0";
+  }
+  function spawn(){
+    var gh = gapH(), gy = 60 + Math.random()*(H-120-gh);
+    pins.push({x:W, gy:gy, gh:gh, w:52, passed:false});
+    if(pins.length%2===0) butters.push({x:W+26, y:gy+gh/2, got:false});
+  }
+  function drawPin(p){
+    ctx.fillStyle = "#8a5a2b";
+    roundRect(ctx,p.x,-10,p.w,p.gy+10,10); ctx.fill();
+    roundRect(ctx,p.x,p.gy+p.gh,p.w,H-(p.gy+p.gh)+10,10); ctx.fill();
+    ctx.fillStyle = "#6b431d";
+    ctx.fillRect(p.x+p.w/2-5, p.gy-16, 10, 16);
+    ctx.fillRect(p.x+p.w/2-5, p.gy+p.gh, 10, 16);
+  }
+  function draw(){
+    ctx.fillStyle = "#fdf3ee"; ctx.fillRect(0,0,W,H);
+    ctx.fillStyle = "rgba(232,176,75,.25)"; ctx.fillRect(0,H-14,W,14);
+    pins.forEach(drawPin);
+    ctx.font = "26px serif"; ctx.textAlign="center";
+    butters.forEach(function(b){ if(!b.got) ctx.fillText("🧈", b.x, b.y+9); });
+    ctx.save();
+    ctx.translate(70, y);
+    ctx.rotate(Math.max(-0.5, Math.min(0.8, vy/12)));
+    ctx.font = "34px serif";
+    ctx.fillText("🥐", 0, 12);
+    ctx.restore();
+    ctx.fillStyle = "#680411"; ctx.textAlign = "center";
+    if(state==="idle"){
+      ctx.font = "700 18px Poppins,sans-serif"; ctx.fillText("Flaky Flip", W/2, H/2-60);
+      ctx.font = "14px Poppins,sans-serif"; ctx.fillText("Tap to flap", W/2, H/2-36);
+    } else if(state==="over"){
+      ctx.fillStyle = "rgba(104,4,17,.85)"; ctx.fillRect(0,H/2-70,W,120);
+      ctx.fillStyle = "#f7e0da";
+      ctx.font = "700 20px Poppins,sans-serif"; ctx.fillText("Crumbled! Score "+score, W/2, H/2-24);
+      ctx.font = "14px Poppins,sans-serif"; ctx.fillText("Tap to bake again", W/2, H/2+6);
+    }
+  }
+  function tick(){
+    if(state==="play"){
+      vy += 0.42; y += vy;
+      nextSpawn--;
+      if(nextSpawn<=0){ spawn(); nextSpawn = spawnEvery(); }
+      var sp = pinSpeed();
+      pins.forEach(function(p){
+        p.x -= sp;
+        if(!p.passed && p.x+p.w < 70){ p.passed = true; score++; elScore.textContent = score; }
+        if(70+15 > p.x && 70-15 < p.x+p.w){
+          if(y-13 < p.gy || y+13 > p.gy+p.gh) gameOver();
+        }
+      });
+      butters.forEach(function(b){
+        b.x -= sp;
+        if(!b.got && Math.abs(b.x-70)<22 && Math.abs(b.y-y)<24){ b.got=true; score+=2; elScore.textContent=score; }
+      });
+      pins = pins.filter(function(p){return p.x>-80});
+      butters = butters.filter(function(b){return b.x>-40});
+      if(y>H-8 || y<0) gameOver();
+    }
+    draw();
+    requestAnimationFrame(tick);
+  }
+  function gameOver(){
+    if(state!=="play") return;
+    state = "over"; overAt = Date.now();
+    setBest("flip", score); elBest.textContent = getBest("flip");
+    submitScore("flip", score);
+  }
+  function action(){
+    if(state==="idle"){ if(!requireName()) return; reset(); state="play"; vy=-7; }
+    else if(state==="play"){ vy = -7; }
+    else if(state==="over" && Date.now()-overAt>500){ reset(); state="play"; vy=-7; }
+  }
+  cv.addEventListener("pointerdown", function(e){ e.preventDefault(); action(); });
+  document.addEventListener("keydown", function(e){
+    if(activeGame!=="flip") return;
+    if(e.code==="Space"){ e.preventDefault(); action(); }
+  });
+  stops.flip = function(){ gameOver(); };
+  reset(); tick();
+})();
+
+/* ═══════════ 3. ORDER RUSH ═══════════ */
+(function(){
+  var ING = [
+    {n:"Turkey",e:"🦃"},{n:"Beef",e:"🥩"},{n:"Chicken",e:"🍗"},{n:"Mozzarella",e:"🧀"},
+    {n:"Cheddar",e:"🧀"},{n:"Lettuce",e:"🥬"},{n:"Tomato",e:"🍅"},{n:"Onions",e:"🧅"},
+    {n:"Mushroom",e:"🍄"},{n:"Pickles",e:"🥒"},{n:"Chips",e:"🍟"},{n:"Nutella",e:"🍫"}
+  ];
+  var ORDERS = [
+    {name:"Pepito", ings:["Turkey","Mozzarella","Chips","Lettuce"]},
+    {name:"Philadelphia", ings:["Beef","Onions","Mushroom","Mozzarella"]},
+    {name:"Cheesy Spicy Beef", ings:["Beef","Cheddar","Onions","Mushroom"]},
+    {name:"Crispy Tawook", ings:["Chicken","Pickles","Chips"]},
+    {name:"Nutella Croissant", ings:["Nutella"]},
+    {name:"Cheese Lover", ings:["Mozzarella","Cheddar","Tomato"]}
+  ];
+  var ticket = document.getElementById("rush-ticket"),
+      tray = document.getElementById("rush-tray"),
+      grid = document.getElementById("rush-grid"),
+      btnStart = document.getElementById("rush-start"),
+      btnServe = document.getElementById("rush-serve"),
+      elTime = document.getElementById("rush-time"),
+      elScore = document.getElementById("rush-score");
+  var playing=false, time=60, score=0, order=null, selected=[], timer=null, orderLeft=0, ordersDone=0;
+
+  ING.forEach(function(ing){
+    var b = document.createElement("button");
+    b.innerHTML = '<span class="em">'+ing.e+'</span>'+ing.n;
+    b.addEventListener("click", function(){
+      if(!playing) return;
+      var i = selected.indexOf(ing.n);
+      if(i>=0){ selected.splice(i,1); b.classList.remove("sel"); }
+      else { selected.push(ing.n); b.classList.add("sel"); }
+      renderTray();
+    });
+    b.dataset.n = ing.n;
+    grid.appendChild(b);
+  });
+  function shuffleGrid(){
+    var btns = [].slice.call(grid.children);
+    btns.sort(function(){return Math.random()-0.5});
+    btns.forEach(function(b){ grid.appendChild(b); });
+  }
+  function emoji(n){ var f=ING.filter(function(i){return i.n===n})[0]; return f?f.e:"❔"; }
+  function renderTray(){
+    tray.innerHTML = "🥐&nbsp;" + (selected.length ? selected.map(emoji).join(" ") : "…") + "&nbsp;🥐";
+  }
+  function renderTicket(){
+    ticket.innerHTML = "<b>Order: "+order.name+"</b><br>"+order.ings.join(", ")+
+      '<br><span class="otimer">⏳ '+orderLeft+"s on this order</span>";
+  }
+  function newOrder(){
+    var prev = order;
+    do { order = ORDERS[Math.floor(Math.random()*ORDERS.length)]; } while(ORDERS.length>1 && order===prev);
+    orderLeft = Math.max(6, 13 - ordersDone);
+    ticket.classList.remove("good","bad");
+    renderTicket();
+    selected = [];
+    grid.querySelectorAll("button").forEach(function(b){ b.classList.remove("sel"); });
+    renderTray();
+  }
+  function penalize(){
+    score = Math.max(0, score-2); elScore.textContent = score;
+    ticket.classList.remove("bad");
+    void ticket.offsetWidth;
+    ticket.classList.add("bad");
+  }
+  function endGame(){
+    playing = false; clearInterval(timer); timer = null;
+    btnServe.style.display = "none"; btnStart.style.display = "";
+    btnStart.textContent = "Play again";
+    ticket.classList.remove("good","bad");
+    ticket.innerHTML = "<b>Shift over! Final score: "+score+"</b><br>"+(score>=50?"Head chef material 👨‍🍳":"The croissants forgive you. Try again!");
+    submitScore("rush", score);
+  }
+  btnStart.addEventListener("click", function(){
+    if(!requireName()) return;
+    playing = true; time = 60; score = 0; ordersDone = 0;
+    elTime.textContent = time; elScore.textContent = score;
+    btnStart.style.display = "none"; btnServe.style.display = "";
+    newOrder();
+    timer = setInterval(function(){
+      time--; elTime.textContent = time;
+      orderLeft--;
+      if(orderLeft<=0 && playing){
+        penalize();
+        newOrder();
+      } else if(playing && order){
+        var t = ticket.querySelector(".otimer");
+        if(t) t.textContent = "⏳ "+orderLeft+"s on this order";
+      }
+      if(time<=0) endGame();
+    },1000);
+  });
+  btnServe.addEventListener("click", function(){
+    if(!playing || !order) return;
+    var want = order.ings.slice().sort().join("|");
+    var got = selected.slice().sort().join("|");
+    if(want===got){
+      var bonus = orderLeft;
+      score += 10 + bonus; elScore.textContent = score;
+      ordersDone++;
+      ticket.classList.remove("bad"); ticket.classList.add("good");
+      ticket.innerHTML = "<b>Served! +10 and +"+bonus+" speed bonus</b>";
+      shuffleGrid();
+      setTimeout(function(){ if(playing) newOrder(); }, 500);
+    } else {
+      penalize();
+    }
+  });
+  stops.rush = function(){ if(playing) endGame(); };
+})();
+
+/* ═══════════ 4. CROISSANT CATCH ═══════════ */
+(function(){
+  var cv = document.getElementById("cv-catch"), ctx = cv.getContext("2d");
+  var W = cv.width, H = cv.height;
+  var state="idle", bx, items, frame, score, lives, overAt=0, keys={}, nextSpawn;
+  var elScore=document.getElementById("catch-score"), elLives=document.getElementById("catch-lives"), elBest=document.getElementById("catch-best");
+  elBest.textContent = getBest("catch");
+
+  function reset(){
+    bx = W/2; items=[]; frame=0; score=0; lives=3; nextSpawn=30;
+    elScore.textContent="0"; elLives.textContent="3";
+  }
+  function spawnEvery(){ return Math.max(16, 52 - Math.floor(frame/200)*3); }
+  function burntProb(){ return Math.min(0.38, 0.2 + frame/5000); }
+  function spawn(){
+    var r = Math.random(), type;
+    var bp = burntProb();
+    if(r < bp) type="burnt"; else if(r < bp+0.18) type="butter"; else type="croissant";
+    var it = {x:30+Math.random()*(W-60), y:-20, type:type,
+              vy:1.9 + Math.min(3.2, frame/450) + score*0.015, vx:0};
+    if(frame>900) it.vx = (Math.random()-0.5)*2.2;
+    items.push(it);
+  }
+  function draw(){
+    ctx.fillStyle="#fdf3ee"; ctx.fillRect(0,0,W,H);
+    ctx.fillStyle="#680411"; ctx.fillRect(0,0,W,26);
+    ctx.fillStyle="#f7e0da"; ctx.font="700 12px Poppins,sans-serif"; ctx.textAlign="center";
+    ctx.fillText("— THE OVEN —", W/2, 17);
+    ctx.font="24px serif";
+    items.forEach(function(it){
+      ctx.fillText(it.type==="croissant"?"🥐":it.type==="butter"?"🧈":"🔥", it.x, it.y);
+    });
+    ctx.font="38px serif";
+    ctx.fillText("🧺", bx, H-16);
+    ctx.fillStyle="#680411";
+    if(state==="idle"){
+      ctx.font="700 18px Poppins,sans-serif"; ctx.fillText("Croissant Catch", W/2, H/2-20);
+      ctx.font="14px Poppins,sans-serif"; ctx.fillText("Tap to start · move with finger / arrows", W/2, H/2+6);
+    } else if(state==="over"){
+      ctx.fillStyle="rgba(104,4,17,.85)"; ctx.fillRect(0,H/2-70,W,120);
+      ctx.fillStyle="#f7e0da";
+      ctx.font="700 20px Poppins,sans-serif"; ctx.fillText("Basket's full of ash! "+score, W/2, H/2-24);
+      ctx.font="14px Poppins,sans-serif"; ctx.fillText("Tap to try again", W/2, H/2+6);
+    }
+  }
+  function tick(){
+    if(state==="play"){
+      frame++;
+      if(keys.ArrowLeft) bx-=5.5;
+      if(keys.ArrowRight) bx+=5.5;
+      bx = Math.max(30, Math.min(W-30, bx));
+      nextSpawn--;
+      if(nextSpawn<=0){ spawn(); nextSpawn = spawnEvery(); }
+      items.forEach(function(it){
+        it.y += it.vy;
+        it.x += it.vx;
+        if(it.x<20||it.x>W-20) it.vx*=-1;
+        if(!it.done && it.y > H-40 && it.y < H-4 && Math.abs(it.x-bx) < 42){
+          it.done = true;
+          if(it.type==="croissant"){ score+=1; }
+          else if(it.type==="butter"){ score+=3; }
+          else { lives--; elLives.textContent=lives; if(lives<=0){ gameOver(); } }
+          elScore.textContent=score;
+        }
+      });
+      items = items.filter(function(it){ return !it.done && it.y < H+30; });
+    }
+    draw();
+    requestAnimationFrame(tick);
+  }
+  function gameOver(){
+    if(state!=="play") return;
+    state="over"; overAt=Date.now();
+    setBest("catch", score); elBest.textContent=getBest("catch");
+    submitScore("catch", score);
+  }
+  cv.addEventListener("pointerdown", function(e){
+    e.preventDefault();
+    if(state==="idle"){ if(!requireName()) return; reset(); state="play"; }
+    else if(state==="over" && Date.now()-overAt>500){ reset(); state="play"; }
+    movePointer(e);
+  });
+  function movePointer(e){
+    var r = cv.getBoundingClientRect();
+    bx = (e.clientX - r.left) * (W / r.width);
+    bx = Math.max(30, Math.min(W-30, bx));
+  }
+  cv.addEventListener("pointermove", function(e){ if(state==="play") movePointer(e); });
+  document.addEventListener("keydown", function(e){
+    if(activeGame!=="catch") return;
+    keys[e.code]=true;
+    if(e.code==="Space"){
+      e.preventDefault();
+      if(state==="idle"){ if(!requireName()) return; reset(); state="play"; }
+      else if(state==="over" && Date.now()-overAt>500){ reset(); state="play"; }
+    }
+  });
+  document.addEventListener("keyup", function(e){ keys[e.code]=false; });
+  stops.catch = function(){ gameOver(); };
+  reset(); tick();
+})();
+
+/* ═══════════ 5. GUESS THE FILLING ═══════════ */
+(function(){
+  var ITEMS = [
+    {name:"Philadelphia", hints:["I live in the Dinner Beef section.","Mushrooms and onions hide inside me.","Mozzarella melts over my beef.","I'm named after an American city."]},
+    {name:"Pepito", hints:["I'm poultry, not beef.","There are chips inside the croissant, not beside it.","Guasacaca sauce is my Venezuelan secret.","My name sounds like a little Spanish nickname."]},
+    {name:"Zaatar Croissant", hints:["I'm a breakfast classic.","Olive oil keeps me glossy.","My filling is a green herb mix.","My name starts with Z."]},
+    {name:"Nutella Mini Bites", hints:["I'm on the sweet side of the menu.","I come in small pieces, not one sandwich.","Hazelnut and chocolate, that's all I need.","Kids order me by name — it starts with N."]},
+    {name:"Almond Croissant", hints:["No meat, no cheese, no problem.","I'm crunchy on top.","A nut gives me my name.","I'm the very first item on the menu."]},
+    {name:"Cheesy Spicy Beef", hints:["I bring the heat.","Two cheeses team up inside me.","Beef is my base.","My name tells you exactly what I am — three words."]},
+    {name:"Extra Sauce Burger", hints:["I'm in the Burgers section.","Mustard, ketchup and BBQ all show up.","Pickles and mushroom sneak in too.","My name promises more of something drippy."]}
+  ];
+  var hintsBox=document.getElementById("guess-hints"), choicesBox=document.getElementById("guess-choices"),
+      btnStart=document.getElementById("guess-start"), btnHint=document.getElementById("guess-hint"),
+      elRound=document.getElementById("guess-round"), elScore=document.getElementById("guess-score"),
+      elTime=document.getElementById("guess-time");
+  var round=0, score=0, target=null, shown=0, locked=false, roundLeft=0, timer=null;
+
+  function pick(arr,n,excl){
+    var pool = arr.filter(function(a){return a!==excl});
+    pool.sort(function(){return Math.random()-0.5});
+    return pool.slice(0,n);
+  }
+  function renderHints(){
+    hintsBox.innerHTML = "";
+    for(var i=0;i<shown;i++){
+      var d=document.createElement("div");
+      d.textContent = "Hint "+(i+1)+": "+target.hints[i];
+      hintsBox.appendChild(d);
+    }
+  }
+  function nextHint(){
+    if(shown < 4){ shown++; renderHints(); }
+    btnHint.style.display = shown<4 ? "" : "none";
+  }
+  function stopTimer(){ if(timer){ clearInterval(timer); timer=null; } }
+  function timeUp(){
+    if(locked) return;
+    locked = true;
+    stopTimer();
+    var d=document.createElement("div");
+    d.innerHTML = "⏰ Time's up! It was <b>"+target.name+"</b>. No points.";
+    hintsBox.appendChild(d);
+    choicesBox.querySelectorAll("button").forEach(function(b){
+      if(b.textContent===target.name) b.classList.add("right");
+      b.disabled = b.textContent!==target.name;
+    });
+    setTimeout(function(){ round<5 ? newRound() : endGame(); }, 1200);
+  }
+  function newRound(){
+    round++; locked=false;
+    elRound.textContent = round+" / 5";
+    target = ITEMS[Math.floor(Math.random()*ITEMS.length)];
+    shown = 1;
+    renderHints();
+    btnHint.style.display = "";
+    roundLeft = Math.max(12, 24 - (round-1)*3);
+    elTime.textContent = roundLeft;
+    stopTimer();
+    timer = setInterval(function(){
+      roundLeft--; elTime.textContent = roundLeft;
+      if(roundLeft<=0) timeUp();
+    },1000);
+    var opts = pick(ITEMS,3,target).concat([target]);
+    opts.sort(function(){return Math.random()-0.5});
+    choicesBox.innerHTML = "";
+    opts.forEach(function(it){
+      var b=document.createElement("button");
+      b.textContent = it.name;
+      b.addEventListener("click", function(){
+        if(locked) return;
+        if(it===target){
+          locked=true;
+          stopTimer();
+          b.classList.add("right");
+          var pts = 5-shown;
+          score += pts; elScore.textContent=score;
+          var d=document.createElement("div");
+          d.textContent = "✅ Correct! +"+pts+" points";
+          hintsBox.appendChild(d);
+          setTimeout(function(){ round<5 ? newRound() : endGame(); }, 900);
+        } else {
+          b.disabled = true;
+          nextHint();
+        }
+      });
+      choicesBox.appendChild(b);
+    });
+  }
+  function endGame(){
+    stopTimer();
+    choicesBox.innerHTML="";
+    btnHint.style.display="none";
+    btnStart.style.display=""; btnStart.textContent="Play again";
+    elTime.textContent = "–";
+    hintsBox.innerHTML = "<div><b>Done! Final score: "+score+" / 20.</b> "+(score>=14?"You know this menu better than the baker. 🥐":"Time for a tasting visit…")+"</div>";
+    submitScore("guess", score);
+  }
+  btnStart.addEventListener("click", function(){
+    if(!requireName()) return;
+    round=0; score=0; elScore.textContent="0";
+    btnStart.style.display="none";
+    newRound();
+  });
+  btnHint.addEventListener("click", nextHint);
+  stops.guess = function(){ stopTimer(); };
+})();
+
+})();
+</script>
+</body>
+</html>

@@ -278,6 +278,7 @@
         const item = getItemFromCard(card);
         const qty = Math.max(1, parseInt(qtyInput.value||'1', 10)||1);
         addToCart(item, qty);
+        if(window.CartFX) CartFX.play(btn);
         const orig = btn.textContent;
         btn.textContent = 'Added ✓';
         btn.style.background = '#166534';
