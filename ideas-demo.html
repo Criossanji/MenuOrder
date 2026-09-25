@@ -48,6 +48,15 @@ canvas.game-canvas{width:100%;max-width:380px;border-radius:12px;border:2px soli
 button.btn-game{background:var(--deepgreen);color:var(--cream);border:none;border-radius:10px;padding:10px 18px;font-weight:700;font-size:14px;cursor:pointer;font-family:Poppins,sans-serif}
 button.btn-game:focus-visible{outline:2px solid var(--butter);outline-offset:2px}
 
+/* big touch-friendly game controls */
+.btn-bigcontrol{width:100%;max-width:380px;background:var(--deepgreen);color:var(--cream);border:none;border-radius:14px;padding:18px;font-weight:800;font-size:18px;cursor:pointer;font-family:Poppins,sans-serif;touch-action:manipulation;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none}
+.btn-bigcontrol:active{transform:scale(.97)}
+.catch-slider{width:100%;max-width:380px;height:48px;-webkit-appearance:none;appearance:none;background:transparent;touch-action:none;cursor:grab}
+.catch-slider::-webkit-slider-runnable-track{height:20px;background:#fff;border:2px solid var(--darkred);border-radius:999px}
+.catch-slider::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:48px;height:48px;margin-top:-16px;background:var(--deepgreen);border:3px solid var(--cream);border-radius:50%;box-shadow:0 2px 8px rgba(0,0,0,.3)}
+.catch-slider::-moz-range-track{height:20px;background:#fff;border:2px solid var(--darkred);border-radius:999px}
+.catch-slider::-moz-range-thumb{width:48px;height:48px;background:var(--deepgreen);border:3px solid var(--cream);border-radius:50%}
+
 /* ── Order Rush ── */
 .ticket{background:#fff;border:2px dashed var(--darkred);border-radius:10px;padding:10px 12px;width:100%;max-width:380px;font-size:14px}
 .ticket b{font-size:15px}
@@ -178,6 +187,7 @@ button.btn-game:focus-visible{outline:2px solid var(--butter);outline-offset:2px
     <p class="how">Tap (or Space) to keep the croissant flying. The rolling pins come faster and the gaps get tighter as your score climbs. Butter 🧈 = +2.</p>
     <div class="game-stage">
       <canvas class="game-canvas" id="cv-flip" width="340" height="460"></canvas>
+      <button class="btn-bigcontrol" id="flip-flap">🪽 TAP TO FLAP</button>
       <div class="game-hud"><span>Score: <b id="flip-score">0</b></span><span>Best: <b id="flip-best">0</b></span></div>
     </div>
   </section>
@@ -204,6 +214,8 @@ button.btn-game:focus-visible{outline:2px solid var(--butter);outline-offset:2px
     <p class="how">Move the basket with finger, mouse or arrow keys. 🥐 +1, 🧈 +3, 🔥 costs a life. The oven bakes faster and faster, items start drifting sideways, and more of them come out burnt. 3 lives.</p>
     <div class="game-stage">
       <canvas class="game-canvas" id="cv-catch" width="340" height="460"></canvas>
+      <input type="range" class="catch-slider" id="catch-slider" min="30" max="310" step="1" value="170" aria-label="Move the basket">
+      <button class="btn-bigcontrol" id="catch-start">▶ Start</button>
       <div class="game-hud"><span>Score: <b id="catch-score">0</b></span><span>Lives: <b id="catch-lives">3</b></span><span>Best: <b id="catch-best">0</b></span></div>
     </div>
   </section>
@@ -291,6 +303,16 @@ document.querySelectorAll("canvas.game-canvas").forEach(function(cv){
     cv.addEventListener(ev, function(e){ e.preventDefault(); }, {passive:false});
   });
 });
+/* iOS pinch-zoom prevention */
+document.addEventListener("gesturestart", function(e){ e.preventDefault(); });
+
+/* big control buttons: react instantly on touch, never trigger zoom or ghost clicks */
+function bindBigButton(btn, fn){
+  btn.addEventListener("touchstart", function(e){ e.preventDefault(); fn(); }, {passive:false});
+  btn.addEventListener("touchend", function(e){ e.preventDefault(); }, {passive:false});
+  btn.addEventListener("dblclick", function(e){ e.preventDefault(); });
+  btn.addEventListener("pointerdown", function(e){ if(e.pointerType !== "touch") fn(); });
+}
 
 function bestKey(g){ return "croissanji-best-"+g; }
 function getBest(g){ return parseInt(localStorage.getItem(bestKey(g))||"0",10); }
@@ -557,6 +579,7 @@ function roundRect(ctx,x,y,w,h,r){
     else if(state==="over" && Date.now()-overAt>500){ reset(); state="play"; vy=-7; }
   }
   cv.addEventListener("pointerdown", function(e){ e.preventDefault(); action(); });
+  bindBigButton(document.getElementById("flip-flap"), action);
   document.addEventListener("keydown", function(e){
     if(activeGame!=="flip") return;
     if(e.code==="Space"){ e.preventDefault(); action(); }
@@ -683,9 +706,12 @@ function roundRect(ctx,x,y,w,h,r){
   var elScore=document.getElementById("catch-score"), elLives=document.getElementById("catch-lives"), elBest=document.getElementById("catch-best");
   elBest.textContent = getBest("catch");
 
+  var slider = document.getElementById("catch-slider");
+  var startBtn = document.getElementById("catch-start");
   function reset(){
     bx = W/2; items=[]; frame=0; score=0; lives=3; nextSpawn=30;
     elScore.textContent="0"; elLives.textContent="3";
+    if(slider) slider.value = String(Math.round(bx));
   }
   function spawnEvery(){ return Math.max(16, 52 - Math.floor(frame/200)*3); }
   function burntProb(){ return Math.min(0.38, 0.2 + frame/5000); }
@@ -726,6 +752,7 @@ function roundRect(ctx,x,y,w,h,r){
       if(keys.ArrowLeft) bx-=5.5;
       if(keys.ArrowRight) bx+=5.5;
       bx = Math.max(30, Math.min(W-30, bx));
+      if(keys.ArrowLeft || keys.ArrowRight) slider.value = String(Math.round(bx));
       nextSpawn--;
       if(nextSpawn<=0){ spawn(); nextSpawn = spawnEvery(); }
       items.forEach(function(it){
@@ -749,18 +776,29 @@ function roundRect(ctx,x,y,w,h,r){
     if(state!=="play") return;
     state="over"; overAt=Date.now();
     setBest("catch", score); elBest.textContent=getBest("catch");
+    startBtn.textContent = "↻ Play again";
   }
+  function startGame(){
+    if(state==="play") return;
+    if(state==="over" && Date.now()-overAt<=500) return;
+    reset(); state="play";
+    startBtn.textContent = "🧺 Catching… (slide below)";
+  }
+  slider.addEventListener("input", function(){
+    bx = Math.max(30, Math.min(W-30, parseInt(slider.value,10)||W/2));
+  });
+  bindBigButton(startBtn, startGame);
   cv.addEventListener("pointerdown", function(e){
     e.preventDefault();
     try{ cv.setPointerCapture(e.pointerId); }catch(_){}
-    if(state==="idle"){ reset(); state="play"; }
-    else if(state==="over" && Date.now()-overAt>500){ reset(); state="play"; }
+    startGame();
     movePointer(e);
   });
   function movePointer(e){
     var r = cv.getBoundingClientRect();
     bx = (e.clientX - r.left) * (W / r.width);
     bx = Math.max(30, Math.min(W-30, bx));
+    slider.value = String(Math.round(bx));
   }
   cv.addEventListener("pointermove", function(e){ if(state==="play") movePointer(e); });
   document.addEventListener("keydown", function(e){
@@ -768,8 +806,7 @@ function roundRect(ctx,x,y,w,h,r){
     keys[e.code]=true;
     if(e.code==="Space"){
       e.preventDefault();
-      if(state==="idle"){ reset(); state="play"; }
-      else if(state==="over" && Date.now()-overAt>500){ reset(); state="play"; }
+      startGame();
     }
   });
   document.addEventListener("keyup", function(e){ keys[e.code]=false; });
